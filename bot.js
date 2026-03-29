@@ -3,14 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { 
-  polling: {
-    autoStart: true,
-    params: {
-      timeout: 10
-    }
-  }
-});
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 const client = new Anthropic();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
