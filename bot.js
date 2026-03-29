@@ -1,4 +1,10 @@
 require('dotenv').config();
+process.on('uncaughtException', (err) => {
+  if (err.code === 'ETELEGRAM' && err.response?.body?.error_code === 409) {
+    console.log('409 xato, davom etmoqda...');
+    return;
+  }
+});
 const TelegramBot = require('node-telegram-bot-api');
 const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
