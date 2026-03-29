@@ -1,15 +1,16 @@
 require('dotenv').config();
-process.on('uncaughtException', (err) => {
-  if (err.code === 'ETELEGRAM' && err.response?.body?.error_code === 409) {
-    console.log('409 xato, davom etmoqda...');
-    return;
-  }
-});
 const TelegramBot = require('node-telegram-bot-api');
 const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { 
+  polling: {
+    autoStart: true,
+    params: {
+      timeout: 10
+    }
+  }
+});
 const client = new Anthropic();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
