@@ -1,7 +1,7 @@
 {
   "name": "medai-bot",
-  "version": "2.0.0",
-  "description": "MedAI - AI Medical Advisor Telegram Bot",
+  "version": "3.0.0",
+  "description": "MedAI - Multilingual AI Medical Bot",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
