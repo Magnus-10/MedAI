@@ -1,6 +1,7 @@
-// ═══════════════════════════════════════════════════════════════════════
-// MedAI Bot v3.0 — Full Multilingual + Multi-Payment + Guideline Translation
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// MedAI Bot v3.1 — FINAL FIXED VERSION
+// Multilingual (7 til) + Multi-Payment + Guideline Translation
+// ═══════════════════════════════════════════════════════════════
 
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
@@ -12,25 +13,26 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 const client = new Anthropic();
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
+// Foydalanuvchi sessiyalari
 const sessions = {};
 
-// ═══════════════════════════════════════════════════════════════════════
-// 1. KO'P TILLI TIZIM — 7 TA TIL
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// TILLAR SOZLAMASI
+// ═══════════════════════════════════════════════════════════════
 
 const LANGUAGES = {
-  uz: { name: "O'zbekcha (Lotin)", flag: '🇺🇿', code: 'uz' },
-  uz_cyr: { name: 'Ўзбекча (Кирил)', flag: '🇺🇿', code: 'uz_cyr' },
-  ru: { name: 'Русский', flag: '🇷🇺', code: 'ru' },
-  en: { name: 'English', flag: '🇬🇧', code: 'en' },
-  kk: { name: 'Қазақша', flag: '🇰🇿', code: 'kk' },
-  ky: { name: 'Кыргызча', flag: '🇰🇬', code: 'ky' },
-  tg: { name: 'Тоҷикӣ', flag: '🇹🇯', code: 'tg' }
+  uz: { name: "O'zbekcha (Lotin)", flag: '🇺🇿' },
+  uz_cyr: { name: 'Ўзбекча (Кирил)', flag: '🇺🇿' },
+  ru: { name: 'Русский', flag: '🇷🇺' },
+  en: { name: 'English', flag: '🇬🇧' },
+  kk: { name: 'Қазақша', flag: '🇰🇿' },
+  ky: { name: 'Кыргызча', flag: '🇰🇬' },
+  tg: { name: 'Тоҷикӣ', flag: '🇹🇯' }
 };
 
-// ─────────────────────────────────────────────
-// BARCHA INTERFEYS MATNLARI 7 TILDA
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// BARCHA INTERFEYS MATNLARI — 7 TILDA
+// ═══════════════════════════════════════════════════════════════
 
 const T = {
 
@@ -61,7 +63,7 @@ Qon, siydik, gormon tahlillari + Rentgen, MRT, KT, UZI
 
 ⚠️ _Eslatma: Men shifokor emasman. Tavsiyalarim yo'naltiruvchi xarakterga ega._`,
 
-    uz_cyr: (name) => `🏥 *MедАИ — Сунъий Интеллект Тиббий Маслаҳатчи*
+    uz_cyr: (name) => `🏥 *МедАИ — Сунъий Интеллект Тиббий Маслаҳатчи*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Ассалому алайкум, ${name}! 👋
@@ -87,7 +89,7 @@ Qon, siydik, gormon tahlillari + Rentgen, MRT, KT, UZI
 
 ⚠️ _Эслатма: Мен шифокор эмасман._`,
 
-    ru: (name) => `🏥 *MedAI — Медицинский ИИ-консультант*
+    ru: (name) => `🏥 *MedAI — Медицинский ИИ-консульта��т*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Здравствуйте, ${name}! 👋
@@ -148,17 +150,10 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
 
 *Менің мүмкіндіктерім:*
 
-👨‍⚕️ *Дәрігер кеңесшісі*
-Симптомдарды талдау, дифференциалды диагноз
-
-💊 *Дәрі-дәрмек кеңесшісі*
-Дәрі ақпараты, өзара әсер, жанама әсерлер
-
-📋 *Созылмалы аурулар мониторингі*
-Диабет, гипертония, астма және басқалар
-
-🔬 *Диагностика*
-Қан, несеп, гормон талдаулары + Рентген, МРТ, КТ, УДЗ
+👨‍⚕️ *Дәрігер кеңесшісі* — Симптомдарды талдау, дифференциалды диагноз
+��� *Дәрі-дәрмек кеңесшісі* — Дәрі ақпараты, өзара әсер
+📋 *Созылмалы аурулар мониторингі* — Диабет, гипертония, астма
+🔬 *Диагностика* — Қан, несеп, гормон + Рентген, МРТ, КТ, УДЗ
 
 🆓 Тегін: күніне 5 сұрақ
 💎 Премиум: шексіз — 40,000 сум/ай
@@ -172,19 +167,10 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
 
 Мен MedAI — Европа жана Америка медициналык колдонмолоруна негизделген ЖИ медициналык жардамчысымын.
 
-*Менин мүмкүнчүлүктөрүм:*
-
-👨‍⚕️ *Дарыгер кеңешчиси*
-Симптомдорду талдоо, дифференциалдык диагноз
-
-💊 *Дары кеңешчиси*
-Дары маалыматтары, өз ара таасирлер
-
-📋 *Созулма оорулар мониторинги*
-Диабет, гипертония, астма жана башкалар
-
-🔬 *Диагностика*
-Кан, заара, гормон анализдери + Рентген, МРТ, КТ, УЗИ
+👨‍⚕️ *Дарыгер кеңешчиси* — Симптомдорду талдоо, дифференциалдык диагноз
+💊 *Дары кеңешчиси* — Дары маалыматтары, өз ара таасирлер
+📋 *Созулма оорулар мониторинги* — Диабет, гипертония, астма
+🔬 *Диагностика* — Кан, заара, гормон + Рентген, МРТ, КТ, УЗИ
 
 🆓 Бекер: күнүнө 5 суроо
 💎 Премиум: чексиз — 40,000 сум/ай
@@ -196,21 +182,12 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
 
 Салом, ${name}! 👋
 
-Ман MedAI — ёрдамчии тиббии зеҳни сунъӣ мебошам, ки ба дастурҳои тиббии Аврупо ва Амрико асос ёфтааст.
+Ман MedAI — ёрдамчии тиббии зеҳни сунъӣ мебошам, ки ба дастурҳои тиббии Аврупо ва Амрико ас��с ёфтааст.
 
-*Имкониятҳои ман:*
-
-👨‍⚕️ *Маслиҳатгари духтур*
-Таҳлили аломатҳо, ташхиси дифференсиалӣ
-
-💊 *Маслиҳатгари дору*
-Маълумот дар бораи дору, таъсири мутақобила
-
-📋 *Мониторинги бемориҳои музмин*
-Диабет, гипертония, астма ва ғайра
-
-🔬 *Диагностика*
-Таҳлили хун, пешоб, ҳормонҳо + Рентген, МРТ, КТ, УЗИ
+👨‍⚕️ *Маслиҳатгари духтур* — Таҳлили аломатҳо, ташхиси дифференсиалӣ
+💊 *Маслиҳатгари дору* — Маълумот дар бораи дору
+📋 *Мониторинги бемориҳои музмин* — Диабет, гипертония, астма
+🔬 *Диагностика* — Таҳлили хун, пешоб, ҳормонҳо + Рентген, МРТ, КТ, УЗИ
 
 🆓 Ройгон: 5 савол дар як рӯз
 💎 Премиум: беҳад — 40,000 сум/моҳ
@@ -219,10 +196,10 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   choose_lang: {
-    uz: '🌐 Tilni tanlang:',
+    uz: '🌐 Tilni tanlang / Выберите язык / Choose language:',
     uz_cyr: '🌐 Тилни танланг:',
     ru: '🌐 Выберите язык:',
-    en: '🌐 Choose language:',
+    en: '🌐 Choose your language:',
     kk: '🌐 Тілді таңдаңыз:',
     ky: '🌐 Тилди тандаңыз:',
     tg: '🌐 Забонро интихоб кунед:'
@@ -239,43 +216,30 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   btn_doctor: {
-    uz: '👨‍⚕️ Shifokor Maslahatchisi',
-    uz_cyr: '👨‍⚕️ Шифокор Маслаҳатчиси',
-    ru: '👨‍⚕️ Консультант врача',
-    en: '👨‍⚕️ Doctor Advisor',
-    kk: '👨‍⚕️ Дәрігер кеңесшісі',
-    ky: '👨‍⚕️ Дарыгер кеңешчиси',
+    uz: '👨‍⚕️ Shifokor Maslahatchisi', uz_cyr: '👨‍⚕️ Шифокор М��слаҳатчиси',
+    ru: '👨‍⚕️ Консультант врача', en: '👨‍⚕️ Doctor Advisor',
+    kk: '👨‍⚕️ Дәрігер кеңесшісі', ky: '👨‍⚕️ Дарыгер кеңешчиси',
     tg: '👨‍⚕️ Маслиҳатгари духтур'
   },
 
   btn_drug: {
-    uz: '💊 Dori Maslahatchisi',
-    uz_cyr: '💊 Дори Маслаҳатчиси',
-    ru: '💊 Консультант по лекарствам',
-    en: '💊 Drug Advisor',
-    kk: '💊 Дәрі кеңесшісі',
-    ky: '💊 Дары кеңешчиси',
+    uz: '💊 Dori Maslahatchisi', uz_cyr: '💊 Дори Маслаҳатчиси',
+    ru: '💊 Консультант по лекарствам', en: '💊 Drug Advisor',
+    kk: '💊 Дәрі кеңесшісі', ky: '💊 Дары кеңешчиси',
     tg: '💊 Маслиҳатгари дору'
   },
 
   btn_chronic: {
-    uz: '📋 Surunkali Kasalliklar',
-    uz_cyr: '📋 Сурункали Касалликлар',
-    ru: '📋 Хронические заболевания',
-    en: '📋 Chronic Diseases',
-    kk: '📋 Созылмалы аурулар',
-    ky: '📋 Созулма оорулар',
+    uz: '📋 Surunkali Kasalliklar', uz_cyr: '📋 Сурункали Касалликлар',
+    ru: '📋 Хронические заболевания', en: '📋 Chronic Diseases',
+    kk: '📋 Созылмалы аурулар', ky: '📋 Созулма оорулар',
     tg: '📋 Бемориҳои музмин'
   },
 
   btn_diagnostic: {
-    uz: '🔬 Diagnostika',
-    uz_cyr: '🔬 Диагностика',
-    ru: '🔬 Диагностика',
-    en: '🔬 Diagnostics',
-    kk: '🔬 Диагностика',
-    ky: '🔬 Диагностика',
-    tg: '🔬 Диагностика'
+    uz: '🔬 Diagnostika', uz_cyr: '🔬 Диагностика',
+    ru: '🔬 Диагностика', en: '🔬 Diagnostics',
+    kk: '🔬 Диагностика', ky: '🔬 Диагностика', tg: '🔬 Диагностика'
   },
 
   btn_profile: {
@@ -333,13 +297,13 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   type_question: {
-    uz: '💬 Savolingizni yozing:',
-    uz_cyr: '💬 Саволингизни ёзинг:',
-    ru: '💬 Напишите ��аш вопрос:',
-    en: '💬 Type your question:',
-    kk: '💬 Сұрағыңызды жазыңыз:',
-    ky: '💬 Суроонузду жазыңыз:',
-    tg: '💬 Саволи худро нависед:'
+    uz: '💬 Savolingizni yozing yoki shikoyatingizni ayting:',
+    uz_cyr: '💬 Саволингизни ёзинг ёки шикоятингизни айтинг:',
+    ru: '💬 Напишите ваш вопрос или опишите жалобу:',
+    en: '💬 Type your question or describe your complaint:',
+    kk: '💬 Сұрағыңызды жазыңыз немесе шағымыңызды айтыңыз:',
+    ky: '💬 Суроонузду жазыңыз же даттанууңузду айтыңыз:',
+    tg: '💬 Саволи худро нависед ё шикояти худро гӯед:'
   },
 
   continue_or_end: {
@@ -363,23 +327,20 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   summary_preparing: {
-    uz: '⏳ Xulosa tayyorlanmoqda...',
-    uz_cyr: '⏳ Хулоса тайёрланмоқда...',
-    ru: '⏳ Подготовка заключения...',
-    en: '⏳ Preparing summary...',
-    kk: '⏳ Қорытынды дайындалуда...',
-    ky: '⏳ Корутунду даярдалууда...',
+    uz: '⏳ Xulosa tayyorlanmoqda...', uz_cyr: '⏳ Хулоса тайёрланмоқда...',
+    ru: '⏳ Подготовка заключения...', en: '⏳ Preparing summary...',
+    kk: '⏳ Қорытынды дайындалуда...', ky: '⏳ Корутунду даярдалууда...',
     tg: '⏳ Хулоса тайёр шуда истодааст...'
   },
 
   limit_reached: {
-    uz: '❌ Kunlik bepul limitingiz tugadi (5/5).\n\n💎 Premium olish uchun /premium bosing!',
-    uz_cyr: '❌ Кунлик бепул лимитингиз тугади (5/5).\n\n💎 Премиум олиш учун /premium босинг!',
-    ru: '❌ Ваш бесплатный дневной лимит исчерпан (5/5).\n\n💎 Для безлимита нажмите /premium!',
-    en: '❌ Your free daily limit reached (5/5).\n\n💎 For unlimited access press /premium!',
-    kk: '❌ Күнделікті тегін лимит аяқталды (5/5).\n\n💎 Шексіз қолжетімділік үшін /premium басыңыз!',
-    ky: '❌ Күнүмдүк бекер лимит аяктады (5/5).\n\n💎 Чексиз мүмкүнчүлүк үчүн /premium басыңыз!',
-    tg: '❌ Ҳудуди ройгони рӯзонаи шумо тамом шуд (5/5).\n\n💎 Барои дастрасии беҳад /premium -ро пахш кунед!'
+    uz: '❌ Kunlik bepul limitingiz tugadi (5/5).\n\n💎 Premium olish uchun tugmani bosing!',
+    uz_cyr: '❌ Кунлик бепул лимитингиз тугади (5/5).\n\n💎 Премиум олиш учун тугмани босинг!',
+    ru: '❌ Ваш бесплатный дневной лимит исчерпан (5/5).\n\n💎 Для безлимита нажмите кнопку!',
+    en: '❌ Your free daily limit reached (5/5).\n\n💎 Press button for unlimited!',
+    kk: '❌ Күнделікті тегін лимит аяқталды (5/5).\n\n💎 Шексіз үшін түймені басыңыз!',
+    ky: '❌ Күнүмдүк бекер лимит аяктады (5/5).\n\n💎 Чексиз үчүн баскычты басыңыз!',
+    tg: '❌ Ҳудуди ройгони рӯзонаи шумо тамом шуд (5/5).\n\n💎 Барои беҳад тугмаро пахш кунед!'
   },
 
   error_general: {
@@ -393,33 +354,33 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   no_active_session: {
-    uz: 'Faol suhbat topilmadi.',
-    uz_cyr: 'Фаол суҳбат топилмади.',
-    ru: 'Активная сессия не найдена.',
-    en: 'No active session found.',
-    kk: 'Белсенді сеанс табылмады.',
-    ky: 'Активдүү сессия табылган жок.',
+    uz: 'Faol suhbat topilmadi.', uz_cyr: 'Фаол суҳбат топилмади.',
+    ru: 'Активная сессия не найдена.', en: 'No active session found.',
+    kk: 'Белсенді сеанс табылмады.', ky: 'Активдүү сессия табылган жок.',
     tg: 'Ҷаласаи фаъол ёфт нашуд.'
   },
 
   select_section: {
-    uz: 'Bo\'limni tanlang 👇',
-    uz_cyr: 'Бўлимни танланг 👇',
-    ru: 'Выберите раздел 👇',
-    en: 'Select a section 👇',
-    kk: 'Бөлімді таңдаңыз 👇',
-    ky: 'Бөлүмдү тандаңыз 👇',
+    uz: 'Bo\'limni tanlang 👇', uz_cyr: 'Бўлимни танланг 👇',
+    ru: 'Выберите раздел 👇', en: 'Select a section 👇',
+    kk: 'Бөлімді таңдаңыз 👇', ky: 'Бөлүмдү тандаңыз 👇',
     tg: 'Бахшро интихоб кунед 👇'
   },
 
+  premium_info: {
+    uz: `💎 *Premium tarif:*\n\n✅ Cheksiz savollar (barcha bo'limlarda)\n✅ Tezkor javob\n✅ Batafsil klinik tahlillar\n✅ Konsultatsiya tarixini saqlash\n\n💳 Narx: 40,000 so'm/oy\n\nTo'lov usulini tanlang:`,
+    uz_cyr: `💎 *Премиум тариф:*\n\n✅ Чексиз саволлар\n✅ Тезкор жавоб\n✅ Батафсил клиник таҳлиллар\n\n💳 Нарх: 40,000 сўм/ой`,
+    ru: `💎 *Премиум тариф:*\n\n✅ Безлимитные вопросы\n✅ Быстрые ответы\n✅ Детальный клинический анализ\n✅ Сохранение истории\n\n💳 Цена: 40,000 сум/мес\n\nВы��ерите способ оплаты:`,
+    en: `💎 *Premium Plan:*\n\n✅ Unlimited questions\n✅ Fast responses\n✅ Detailed clinical analysis\n✅ History saving\n\n💳 Price: 40,000 UZS/month\n\nChoose payment method:`,
+    kk: `💎 *Премиум тариф:*\n\n✅ Шексіз сұрақтар\n✅ Жылдам жауаптар\n\n��� Бағасы: 40,000 сум/ай`,
+    ky: `💎 *Премиум тариф:*\n\n✅ Чексиз суроолор\n✅ Тез жооптор\n\n💳 Баасы: 40,000 сум/ай`,
+    tg: `💎 *Тарифи Премиум:*\n\n✅ Саволҳои беҳад\n✅ Ҷавобҳои зуд\n\n💳 Нарх: 40,000 сум/моҳ`
+  },
+
   payment_title: {
-    uz: 'MedAI Premium — 1 oy',
-    uz_cyr: 'МедАИ Премиум — 1 ой',
-    ru: 'MedAI Премиум — 1 месяц',
-    en: 'MedAI Premium — 1 month',
-    kk: 'MedAI Премиум — 1 ай',
-    ky: 'MedAI Премиум — 1 ай',
-    tg: 'MedAI Премиум — 1 моҳ'
+    uz: 'MedAI Premium — 1 oy', uz_cyr: 'МедАИ Премиум — 1 ой',
+    ru: 'MedAI Премиум — 1 месяц', en: 'MedAI Premium — 1 month',
+    kk: 'MedAI Премиум — 1 ай', ky: 'MedAI Премиум — 1 ай', tg: 'MedAI Премиум — 1 моҳ'
   },
 
   payment_desc: {
@@ -434,32 +395,12 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
 
   payment_success: {
     uz: (until) => `✅ To'lov muvaffaqiyatli!\n\n💎 Premium muddati: ${until}\nBarcha bo'limlarda cheksiz! 🎉`,
-    uz_cyr: (until) => `✅ Тўлов муваффақиятли!\n\n💎 Премиум муддати: ${until}\nБарча бўлимларда чексиз! 🎉`,
-    ru: (until) => `✅ Оплата прошла успешно!\n\n💎 Премиум до: ${until}\nБезлим��т во всех разделах! 🎉`,
-    en: (until) => `✅ Payment successful!\n\n💎 Premium until: ${until}\nUnlimited in all sections! 🎉`,
-    kk: (until) => `✅ Төлем сәтті!\n\n💎 Премиум мерзімі: ${until}\nБарлық бөлімдерде шексіз! 🎉`,
-    ky: (until) => `✅ Төлөм ийгиликтүү!\n\n💎 Премиум мөөнөтү: ${until}\nБардык бөлүмдөрдө чексиз! 🎉`,
-    tg: (until) => `✅ Пардохт муваффақ!\n\n💎 Премиум то: ${until}\nДар ҳамаи бахшҳо беҳад! 🎉`
-  },
-
-  premium_info: {
-    uz: `💎 *Premium tarif:*\n\n✅ Cheksiz savollar (barcha bo'limlarda)\n✅ Tezkor javob\n✅ Batafsil klinik tahlillar\n✅ Konsultatsiya tarixini saqlash\n\n💳 Narx: 40,000 so'm/oy\n\nTo'lov usulini tanlang:`,
-    uz_cyr: `💎 *Премиум тариф:*\n\n✅ Чексиз саволлар\n✅ Тезкор жавоб\n✅ Батафсил клиник таҳлиллар\n\n💳 Нарх: 40,000 сўм/ой\n\nТўл��в усулини танланг:`,
-    ru: `💎 *Премиум тариф:*\n\n✅ Безлимитные вопросы (во всех разделах)\n✅ Быстрые ответы\n✅ Детальный клинический анализ\n✅ Сохранение истории\n\n💳 Цена: 40,000 сум/мес\n\nВы��ерите способ оплаты:`,
-    en: `💎 *Premium Plan:*\n\n✅ Unlimited questions (all sections)\n✅ Fast responses\n✅ Detailed clinical analysis\n✅ Consultation history\n\n💳 Price: 40,000 UZS/month\n\nChoose payment method:`,
-    kk: `💎 *Премиум тариф:*\n\n✅ Шексіз сұрақтар\n✅ Жылдам жауаптар\n✅ Егжей-тегжейлі талдау\n\n💳 Бағасы: 40,000 сум/ай\n\nТөлем әдісін таңдаңыз:`,
-    ky: `💎 *Премиум тариф:*\n\n✅ Чексиз суроолор\n✅ Тез жооптор\n✅ Деталдуу анализ\n\n💳 Баасы: 40,000 сум/ай\n\nТөлөм ыкмасын тандаңыз:`,
-    tg: `💎 *Тарифи Премиум:*\n\n✅ Саволҳои беҳад\n✅ Ҷавобҳои зуд\n✅ Таҳлили муфассали клиникӣ\n\n💳 Нарх: 40,000 сум/моҳ\n\nТарзи пардохтро интихоб кунед:`
-  },
-
-  choose_payment: {
-    uz: 'To\'lov usulini tanlang:',
-    uz_cyr: 'Тўлов усулини танланг:',
-    ru: 'Выберите способ оплаты:',
-    en: 'Choose payment method:',
-    kk: 'Төлем әдісін таңдаңыз:',
-    ky: 'Төлөм ыкмасын тандаңыз:',
-    tg: 'Тарзи пардохтро интихоб кунед:'
+    uz_cyr: (until) => `✅ Тўлов муваффақиятли!\n\n💎 Премиум муддати: ${until} 🎉`,
+    ru: (until) => `✅ Оплата прошла успешно!\n\n💎 Премиум до: ${until}\nБезлимит! 🎉`,
+    en: (until) => `✅ Payment successful!\n\n💎 Premium until: ${until}\nUnlimited! 🎉`,
+    kk: (until) => `✅ Төлем сәтті!\n\n💎 Премиум мерзімі: ${until} 🎉`,
+    ky: (until) => `✅ Төлөм ийгиликтүү!\n\n💎 Премиум мөөнөтү: ${until} 🎉`,
+    tg: (until) => `✅ Пардохт муваффақ!\n\n💎 Премиум то: ${until} 🎉`
   },
 
   diag_title: {
@@ -479,21 +420,21 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
     en: '📋 *Chronic Diseases*\n\nSelect your condition:',
     kk: '📋 *Созылмалы аурулар*\n\nАуруыңызды таңдаңыз:',
     ky: '📋 *Созулма оорулар*\n\nОоруңузду тандаңыз:',
-    tg: '📋 *Бемориҳои музмин*\n\nБеморіатонро интихоб кунед:'
+    tg: '📋 *Бемориҳои музмин*\n\nБеморӣатонро интихоб кунед:'
   },
 
   send_lab_text: {
-    uz: 'Tahlil natijalarini matn sifatida yozing yoki 📸 rasm yuboring:',
-    uz_cyr: 'Таҳлил натижаларини матн сифатида ёзинг ёки 📸 расм юборинг:',
-    ru: 'Напишите результаты анализов текстом или отправьте 📸 фото:',
-    en: 'Type your lab results or send a 📸 photo:',
-    kk: 'Талдау нәтижелерін мәтін түрінде жазыңыз немесе 📸 сурет жіберіңіз:',
-    ky: 'Анализ жыйынтыктарын жазыңыз же 📸 сүрөт жөнөтүңүз:',
-    tg: 'Натиҷаҳои таҳлилро бо матн нависед ё 📸 сурат фиристед:'
+    uz: '📝 Tahlil natijalarini matn sifatida yozing yoki 📸 rasm yuboring:',
+    uz_cyr: '📝 Таҳлил натижаларини матн ёзинг ёки 📸 расм юборинг:',
+    ru: '📝 Напишите результаты анализов текстом или отправьте 📸 фото:',
+    en: '📝 Type your lab results or send a 📸 photo:',
+    kk: '📝 Нәтижелерді жазыңыз немесе 📸 сурет жіберіңіз:',
+    ky: '📝 Жыйынтыктарды жазыңыз же 📸 сүрөт жөнөтүңүз:',
+    tg: '📝 Натиҷаҳоро бо матн нависед ё 📸 сурат фиристед:'
   },
 
   send_image: {
-    uz: '📸 Tibbiy tasvirni yuboring (rasm aniq bo\'lishi kerak):',
+    uz: '📸 Tibbiy tasvirni yuboring:',
     uz_cyr: '📸 Тиббий тасвирни юборинг:',
     ru: '📸 Отправьте медицинское изображение:',
     en: '📸 Send the medical image:',
@@ -503,10 +444,10 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   image_analyzing: {
-    uz: '⏳ Rasm tahlil qilinmoqda... Bu biroz vaqt olishi mumkin.',
+    uz: '⏳ Rasm tahlil qilinmoqda...',
     uz_cyr: '⏳ Расм таҳлил қилинмоқда...',
-    ru: '⏳ Изображение анализируется... Это может занять некоторое время.',
-    en: '⏳ Analyzing image... This may take a moment.',
+    ru: '⏳ Изображение анализируется...',
+    en: '⏳ Analyzing image...',
     kk: '⏳ Сурет талданып жатыр...',
     ky: '⏳ Сүрөт анализделүүдө...',
     tg: '⏳ Сурат таҳлил шуда истодааст...'
@@ -540,295 +481,125 @@ Blood, urine, hormone tests + X-ray, MRI, CT, Ultrasound analysis
   },
 
   status_text: {
-    uz: (status, count, until) => `👤 *Holatingiz:*\n\nTarif: ${status}\nBugungi savollar: ${count}${until ? `\nPremium muddati: ${until}` : ''}`,
-    uz_cyr: (status, count, until) => `👤 *Ҳолатингиз:*\n\nТариф: ${status}\nБугунги саволлар: ${count}${until ? `\nПремиум муддати: ${until}` : ''}`,
-    ru: (status, count, until) => `👤 *Ваш статус:*\n\nТариф: ${status}\nВопросов сегодня: ${count}${until ? `\nПремиум до: ${until}` : ''}`,
-    en: (status, count, until) => `👤 *Your status:*\n\nPlan: ${status}\nQuestions today: ${count}${until ? `\nPremium until: ${until}` : ''}`,
-    kk: (status, count, until) => `👤 *Жағдайыңыз:*\n\nТариф: ${status}\nБүгінгі сұрақтар: ${count}${until ? `\nПремиум мерзімі: ${until}` : ''}`,
-    ky: (status, count, until) => `👤 *Абалыңыз:*\n\nТариф: ${status}\nБүгүнкү суроолор: ${count}${until ? `\nПремиум мөөнөтү: ${until}` : ''}`,
-    tg: (status, count, until) => `👤 *Вазъияти шумо:*\n\nТариф: ${status}\nСаволҳои имрӯза: ${count}${until ? `\nПремиум то: ${until}` : ''}`
+    uz: (s, c, u) => `👤 *Holatingiz:*\n\nTarif: ${s}\nBugungi savollar: ${c}${u ? `\nPremium muddati: ${u}` : ''}`,
+    uz_cyr: (s, c, u) => `👤 *Ҳолатингиз:*\n\nТариф: ${s}\nБугунги саволлар: ${c}${u ? `\nПремиум: ${u}` : ''}`,
+    ru: (s, c, u) => `👤 *Ваш статус:*\n\nТариф: ${s}\nВопросов сегодня: ${c}${u ? `\nПремиум до: ${u}` : ''}`,
+    en: (s, c, u) => `👤 *Your status:*\n\nPlan: ${s}\nQuestions today: ${c}${u ? `\nPremium until: ${u}` : ''}`,
+    kk: (s, c, u) => `👤 *Жағдайыңыз:*\n\nТариф: ${s}\nСұрақтар: ${c}${u ? `\nПремиум: ${u}` : ''}`,
+    ky: (s, c, u) => `👤 *Абалыңыз:*\n\nТариф: ${s}\nСуроолор: ${c}${u ? `\nПремиум: ${u}` : ''}`,
+    tg: (s, c, u) => `👤 *Вазъият:*\n\nТариф: ${s}\nСаволҳо: ${c}${u ? `\nПремиум: ${u}` : ''}`
   },
 
   chronic_enter_data: {
-    uz: (disease) => `📝 *${disease} — Bugungi ma'lumotlar*\n\nKo'rsatkichlarni yozing:`,
-    uz_cyr: (disease) => `📝 *${disease} — Бугунги маълумотлар*\n\nКўрсаткичларни ёзинг:`,
-    ru: (disease) => `📝 *${disease} — Данные за сегодня*\n\nВведите показатели:`,
-    en: (disease) => `📝 *${disease} — Today's data*\n\nEnter your readings:`,
-    kk: (disease) => `📝 *${disease} — Бүгінгі деректер*\n\n��өрсеткіштерді жазыңыз:`,
-    ky: (disease) => `📝 *${disease} — Бүгүнкү маалыматтар*\n\nКөрсөткүчтөрдү жазыңыз:`,
-    tg: (disease) => `📝 *${disease} — Маълумоти имрӯза*\n\nНишондиҳандаҳоро нависед:`
+    uz: (d) => `📝 *${d}*\n\nBugungi ko'rsatkichlarni yozing:`,
+    uz_cyr: (d) => `📝 *${d}*\n\nБугунги кўрсаткичларни ёзинг:`,
+    ru: (d) => `📝 *${d}*\n\nВведите сегодняшние показатели:`,
+    en: (d) => `📝 *${d}*\n\nEnter today's readings:`,
+    kk: (d) => `📝 *${d}*\n\nБүгінгі көрсеткіштерді жазыңыз:`,
+    ky: (d) => `📝 *${d}*\n\nБүгүнкү көрсөткүчтөрдү жазыңыз:`,
+    tg: (d) => `📝 *${d}*\n\nНишондиҳандаҳои имрӯзаро нависед:`
   },
 
   emergency: {
-    uz: `🚨🚨🚨 SHOSHILINCH HOLAT 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ DARHOL 103 GA QO'NG'IROQ QILING!\n\n🏥 TEZ YORDAM KELGUNCHA:\n1. Tinch bo'ling\n2. Yoningizda birovni chaqiring\n3. 103 ga qo'ng'iroq qiling\n\n⏰ HAR BIR DAQIQA MUHIM!`,
-    uz_cyr: `🚨🚨🚨 ШОШИЛИНЧ ҲОЛАТ 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ ДАРҲОЛ 103 ГА ҚЎНҒИРОҚ ҚИЛИНГ!`,
-    ru: `🚨🚨🚨 ЭКСТРЕННАЯ СИТУАЦИЯ 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ НЕМЕДЛЕННО ВЫЗОВИТЕ 103!\n\n🏥 ДО ПРИЕЗДА СКОРОЙ:\n1. Сохраняйте спокойствие\n2. Позовите кого-нибудь рядом\n3. Звоните 103\n\n⏰ КАЖДАЯ МИНУТА НА СЧЕТУ!`,
-    en: `🚨🚨🚨 EMERGENCY 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ CALL 103 IMMEDIATELY!\n\n🏥 WHILE WAITING:\n1. Stay calm\n2. Call someone nearby\n3. Call 103\n\n⏰ EVERY MINUTE COUNTS!`,
-    kk: `🚨🚨🚨 ШҰҒЫЛ ЖАҒДАЙ 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ ДЕРЕУ 103-КЕ ҚОҢЫРАУ ШАЛЫҢЫЗ!`,
-    ky: `🚨🚨🚨 ШАШЫЛЫШ АБАЛ 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ ДАРОО 103-КӨ ЧАЛЫҢЫЗ!`,
-    tg: `🚨🚨🚨 ҲОЛАТИ ФАВҚУЛОДДА 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n⚡ ҲОЗИР БА 103 ЗАНГ ЗАНЕД!`
+    uz: `🚨🚨🚨 SHOSHILINCH HOLAT 🚨🚨🚨\n━━━━━━━━━━━━━━━━━━━━━━━━━\n⚡ DARHOL 103 GA QO'NG'IROQ QILING!\n\n🏥 TEZ YORDAM KELGUNCHA:\n1. Tinch bo'ling\n2. Yoningizda birovni chaqiring\n3. 103 ga qo'ng'iroq qiling\n\n⏰ HAR BIR DAQIQA MUHIM!`,
+    uz_cyr: `🚨🚨🚨 ШОШИЛИНЧ ҲОЛАТ 🚨🚨🚨\n⚡ ДАРҲОЛ 103 ГА ҚЎНҒИРОҚ ҚИЛИНГ!`,
+    ru: `🚨🚨🚨 ЭКСТРЕННАЯ СИТУАЦИЯ 🚨🚨🚨\n⚡ НЕМЕДЛЕННО ЗВОНИТЕ 103!\n\n1. Сохраняйте спокойствие\n2. Позовите кого-то рядом\n3. Звоните 103\n\n⏰ КАЖДАЯ МИНУТА НА СЧЕТУ!`,
+    en: `🚨🚨🚨 EMERGENCY 🚨🚨🚨\n⚡ CALL 103 IMMEDIATELY!\n\n1. Stay calm\n2. Call someone nearby\n3. Call 103\n\n⏰ EVERY MINUTE COUNTS!`,
+    kk: `🚨🚨🚨 ШҰҒЫЛ ЖАҒДАЙ 🚨🚨🚨\n⚡ ДЕРЕУ 103-КЕ ҚОҢЫРАУ ШАЛЫҢЫЗ!`,
+    ky: `🚨🚨🚨 ШАШЫЛЫШ АБАЛ 🚨🚨🚨\n⚡ ДАРОО 103-КӨ ЧАЛЫҢЫЗ!`,
+    tg: `🚨🚨🚨 ҲОЛАТИ ФАВҚУЛОДДА 🚨🚨🚨\n⚡ ҲОЗИР БА 103 ЗАНГ ЗАНЕД!`
   }
 };
 
-// Matn olish funksiyasi
-function t(key, lang = 'uz') {
-  const translation = T[key];
-  if (!translation) return key;
-  return translation[lang] || translation['uz'] || key;
+// Matn olish
+function t(key, lang) {
+  if (!lang) lang = 'uz';
+  const tr = T[key];
+  if (!tr) return key;
+  return tr[lang] || tr['uz'] || key;
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 2. SYSTEM PROMPTS — GUIDELINE TARJIMASI BILAN
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM PROMPTS
+// ═══════════════════════════════════════════════════════════════
 
 function getLanguageInstruction(lang) {
-  const instructions = {
-    uz: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Uzbek (Latin script)
-- Medical terms: write in Uzbek first, then English in parentheses
-  Example: Yurak yetishmovchiligi (Heart Failure)
-- Guideline names: keep in original English BUT add Uzbek translation/explanation
-  Example: "AHA/ACC (Amerika Yurak Assotsiatsiyasi / Amerika Kardiologlar Kollejji) guideline'iga ko'ra..."
-- Drug class names: Uzbek (English)
-  Example: "Angiotenzin konvertaz fermenti inhibitorlari (ACE inhibitors)"
-- Scoring systems: explain in Uzbek what each component means
-- Clinical terms: always provide Uzbek equivalent
-  Example: "Differensial diagnoz (Differential diagnosis) — farqlash kerak bo'lgan kasalliklar ro'yxati"
-`,
-    uz_cyr: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Uzbek CYRILLIC script (Ўзбек кирил ёзуви)
-- Medical terms: write in Uzbek Cyrillic first, then English in parentheses
-  Example: Юрак етишмовчилиги (Heart Failure)
-- Guideline names: keep in original English BUT add Uzbek Cyrillic explanation
-  Example: "AHA/ACC (Америка Юрак Ассоциацияси) гайдлайнига кўра..."
-- All text must be in Cyrillic Uzbek script
-- Drug class names: Ўзбекча (English)
-  Example: "Ангиотензин конвертаз фермент ингибиторлари (ACE inhibitors)"
-`,
-    ru: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Russian (Русский язык)
-- Medical terms: write in Russian first, then English in parentheses
-  Example: Сердечная недостаточность (Heart Failure)
-- Guideline names: keep in original English BUT add Russian translation
-  Example: "Согласно рекомендациям AHA/ACC (Американская ассоциация сердца / Американский колледж кардиологии)..."
-- Drug class names: Russian (English)
-  Example: "Ингибиторы ангиотензинпревращающего фермента (ACE inhibitors)"
-- Scoring systems: explain in Russian
-- Use standard Russian medical terminology
-`,
-    en: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in English
-- Use standard medical terminology
-- Reference guidelines by their standard abbreviations
-- Provide clear, professional medical English
-- Use layperson-friendly explanations alongside medical terms
-  Example: "Heart Failure (a condition where the heart cannot pump blood effectively)"
-`,
-    kk: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Kazakh (Қазақ тілі, Cyrillic script)
-- Medical terms: write in Kazakh first, then English in parentheses
-  Example: Жүрек жеткіліксіздігі (Heart Failure)
-- Guideline names: keep in original English BUT add Kazakh explanation
-  Example: "AHA/ACC (Америка Жүрек Қауымдастығы) нұсқаулығына сәйкес..."
-- Drug class names: Қазақша (English)
-  Example: "Ангиотензин айналдырушы фермент тежегіштері (ACE inhibitors)"
-- Use standard Kazakh medical terminology
-- All text must be in Kazakh Cyrillic
-`,
-    ky: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Kyrgyz (Кыргыз тили, Cyrillic script)
-- Medical terms: write in Kyrgyz first, then English in parentheses
-  Example: Жүрөк жетишсиздиги (Heart Failure)
-- Guideline names: keep in original English BUT add Kyrgyz explanation
-  Example: "AHA/ACC (Америка Жүрөк Ассоциациясы) колдонмосуна ылайык..."
-- Drug class names: Кыргызча (English)
-  Example: "Ангиотензин айландыргыч фермент ингибиторлору (ACE inhibitors)"
-- Use standard Kyrgyz medical terminology
-`,
-    tg: `
-# LANGUAGE RULES:
-- Respond ENTIRELY in Tajik (Забони тоҷикӣ, Cyrillic script)
-- Medical terms: write in Tajik first, then English in parentheses
-  Example: Норасоии дил (Heart Failure)
-- Guideline names: keep in original English BUT add Tajik explanation
-  Example: "Мувофиқи тавсияҳои AHA/ACC (Ассотсиатсияи Дили Амрико)..."
-- Drug class names: Тоҷикӣ (English)
-  Example: "Ингибиторҳои ферменти табдилдиҳандаи ангиотензин (ACE inhibitors)"
-- Use standard Tajik medical terminology
-- All text must be in Tajik Cyrillic
-`
+  const map = {
+    uz: `Respond ENTIRELY in Uzbek (Latin script). Medical terms: O'zbekcha (English). Example: Yurak yetishmovchiligi (Heart Failure). Guideline names: keep English, add Uzbek explanation. Example: "AHA/ACC (Amerika Yurak Assotsiatsiyasi) guideline'iga ko'ra..."`,
+    uz_cyr: `Respond ENTIRELY in Uzbek CYRILLIC script (Ўзбек кирил). Medical terms: Ўзбекча (English). Example: Юрак етишмовчилиги (Heart Failure). All text in Cyrillic Uzbek.`,
+    ru: `Respond ENTIRELY in Russian. Medical terms: по-русски (English). Example: Сердечная недостаточность (Heart Failure). Guideline: "Согласно рекомендациям AHA/ACC (Американская ассоциация сердца)..."`,
+    en: `Respond ENTIRELY in English. Use standard medical terminology with layperson explanations. Example: "Heart Failure (a condition where the heart cannot pump blood effectively)"`,
+    kk: `Respond ENTIRELY in Kazakh (Қазақ тілі, Cyrillic). Medical terms: Қазақша (English). Example: Жүрек жеткіліксіздігі (Heart Failure). Guideline: "AHA/ACC (Америка Жүрек Қауымдастығы) нұсқаулығына сәйкес..."`,
+    ky: `Respond ENTIRELY in Kyrgyz (Кыргыз тили, Cyrillic). Medical terms: Кыргызча (English). Example: Жүрөк жетишсиздиги (Heart Failure). Guideline: "AHA/ACC (Америка Жүрөк Ассоциациясы) колдонмосуна ылайык..."`,
+    tg: `Respond ENTIRELY in Tajik (Забони тоҷикӣ, Cyrillic). Medical terms: Тоҷикӣ (English). Example: Норасоии дил (Heart Failure). Guideline: "Мувофиқи тавсияҳои AHA/ACC (Ассотсиатсияи Дили Амрико)..."`
   };
-  return instructions[lang] || instructions['uz'];
+  return map[lang] || map['uz'];
 }
 
 function getDoctorPrompt(lang) {
-  return `
-# ROLE & IDENTITY
-You are MedAI Doctor Advisor — a highly advanced AI clinical decision support system providing evidence-based medical guidance strictly adhering to European and American clinical guidelines.
+  return `You are MedAI Doctor Advisor — AI clinical decision support system. Strictly follow European/American guidelines.
 
-${getLanguageInstruction(lang)}
+LANGUAGE: ${getLanguageInstruction(lang)}
 
-# GUIDELINE TRANSLATION RULES (CRITICAL):
-When citing ANY guideline or clinical term, you MUST:
-1. State the guideline abbreviation (e.g., AHA/ACC)
-2. Provide the FULL NAME in English
-3. Translate/explain the guideline's purpose in the patient's language
-4. When quoting specific recommendations, translate the clinical meaning
+GUIDELINE TRANSLATION: When citing ANY guideline, provide abbreviation + full English name + translation in patient's language. Translate ALL medical terms.
 
-Example for Uzbek:
-"AHA/ACC (American Heart Association / American College of Cardiology — Amerika Yurak Assotsiatsiyasi) ning 2023-yilgi yurak yetishmovchiligi bo'yicha guideline'iga ko'ra, HFrEF (Heart Failure with Reduced Ejection Fraction — chiqarish fraktsiyasi pasaygan yurak yetishmovchiligi) da birinchi qator davo sifatida GDMT (Guideline-Directed Medical Therapy — guideline asosida boshqariladigan davo) tavsiya etiladi, bu quyidagilarni o'z ichiga oladi:
-• RASS inhibitorlari (RAAS inhibitors — renin-angiotenzin-aldosteron tizimi inhibitorlari)
-• Beta-blokerlar (Beta-blockers — yurak urish tezligini pasaytiradigan dorilar guruhi)
-• MRA (Mineralocorticoid Receptor Antagonists — mineralokortikoid retseptor antagonistlari)
-• SGLT2 inhibitorlari (SGLT2 inhibitors — natriy-glyukoza ko'chirish oqsili 2 inhibitorlari)"
+GUIDELINES: AHA/ACC, ESC, ADA, EASD, GOLD, GINA, KDIGO, ACR, EULAR, NCCN, ESMO, IDSA, CDC, WHO, AAP, AAN, ACOG, APA, NICE, UpToDate, Cochrane, BMJ Best Practice
 
-# CRITICAL LEGAL DISCLAIMER
-Include this in the patient's language at the START of every first consultation.
+METHODOLOGY:
+Phase 1: History taking (SOCRATES, PMH, meds, allergies, FH, SH). Ask 1-2 questions at a time.
+Phase 2: After 4-5+ exchanges — differential diagnosis with %, risk level (🔴🟡🟢), clinical scores, investigations, can't-miss diagnoses.
+Phase 3: Non-pharmacological + pharmacological (drug CLASS only) + referral + follow-up + red flags. Cite specific guideline for each recommendation.
 
-# CORE GUIDELINES (FULL LIST)
-## Cardiology: AHA/ACC, ESC, JNC 8, CHEST
-## Endocrinology: ADA, EASD, Endocrine Society, ATA/ETA, AACE
-## Pulmonology: GOLD, GINA, ATS/ERS, BTS
-## Gastroenterology: ACG, AGA, AASLD, EASL, Rome IV
-## Nephrology: KDIGO, KDOQI
-## Rheumatology: ACR, EULAR
-## Neurology: AAN, EAN, ICHD-3
-## Infectious: IDSA, CDC, WHO, ESCMID
-## Oncology: NCCN, ESMO, ACS, ASCO
-## Urology: AUA, EAU
-## Dermatology: AAD, EADV, BAD
-## Psychiatry: APA, NICE, WFSBP, CANMAT
-## OB/GYN: ACOG, RCOG, FIGO
-## Pediatrics: AAP, ESPID, ESPGHAN
-## General: UpToDate, Cochrane, BMJ Best Practice, DynaMed, NICE, SIGN
+EMERGENCY DETECTION: Chest pain+dyspnea, stroke signs, severe bleeding, anaphylaxis, suicidal ideation, high fever with AMS, seizure >5min → IMMEDIATELY flag, tell to call 103.
 
-# CONSULTATION METHODOLOGY
+DISCLAIMER: Include warning that you're AI, not a doctor. Every response must end with reminder.
 
-## Phase 1: COMPREHENSIVE HISTORY (SOCRATES + PMH + Meds + Allergies + FH + SH + ROS)
-- Ask 1-2 questions at a time, conversationally
-- Minimum 4-5 exchanges before analysis
-
-## Phase 2: CLINICAL ANALYSIS (after sufficient data)
-- Differential diagnosis with probabilities and guideline references
-- Risk stratification (🔴🟡🟢)
-- Clinical scoring when applicable
-- "Can't miss" diagnoses
-
-## Phase 3: GUIDELINE-BASED RECOMMENDATIONS
-- Non-pharmacological
-- Pharmacological (drug CLASS only, with guideline reference)
-- Referral recommendations
-- Follow-up plan
-- Red flags
-
-# EMERGENCY DETECTION — immediately flag life-threatening situations
-
-# STRICT RULES:
-1. NEVER prescribe specific drugs with doses
-2. NEVER deviate from listed guidelines
-3. ALWAYS show differential diagnosis
-4. ALWAYS assign risk level
-5. ALWAYS cite guidelines WITH translation
-6. ALWAYS recommend doctor consultation
-7. NEVER claim to be a doctor
-8. ALWAYS check for emergencies
-`;
+RULES: Never prescribe specific drugs with doses. Never deviate from guidelines. Always show differentials. Always cite guidelines WITH translation. Never say "100% certain".`;
 }
 
 function getDrugPrompt(lang) {
-  return `
-# ROLE
-You are MedAI Drug Advisor — AI pharmaceutical consultation system providing evidence-based drug information per FDA, EMA, WHO standards.
+  return `You are MedAI Drug Advisor — AI pharmaceutical consultation system per FDA, EMA, WHO.
 
-${getLanguageInstruction(lang)}
+LANGUAGE: ${getLanguageInstruction(lang)}
 
-# GUIDELINE TRANSLATION: Same rules as Doctor — translate all terms and guideline names.
+SOURCES: FDA, EMA, WHO Essential Medicines, BNF, Lexicomp, Micromedex, Stockley's, Beers Criteria
 
-# SOURCES: FDA, EMA, WHO Essential Medicines, BNF, Lexicomp, Micromedex, Stockley's, Beers Criteria, PharmGKB
+CAPABILITIES: Drug info (MOA, pharmacokinetics), interactions (🔴🟠🟡🟢 severity), side effects, contraindications, pregnancy/lactation (FDA categories), geriatric/pediatric, renal/hepatic adjustments.
 
-# CAPABILITIES:
-1. Drug information (MOA, pharmacokinetics)
-2. Drug interactions (drug-drug, drug-food, drug-herb) with severity: 🔴🟠🟡🟢
-3. Side effects (common, uncommon, serious)
-4. Contraindications (absolute, relative)
-5. Pregnancy/Lactation (FDA categories)
-6. Geriatric/Pediatric considerations
-7. Renal/Hepatic dose adjustments
-
-# STRICT RULES:
-1. NEVER prescribe — only inform
-2. ALWAYS recommend doctor consultation
-3. ALWAYS check interactions
-4. ALWAYS ask about allergies and pregnancy
-`;
+RULES: NEVER prescribe — only inform. ALWAYS recommend doctor. ALWAYS check interactions. ALWAYS ask about allergies and pregnancy. Translate all terms.`;
 }
 
 function getChronicPrompt(lang) {
-  return `
-# ROLE
-You are MedAI Chronic Disease Monitor — AI monitoring system for chronic diseases based on international guidelines.
+  return `You are MedAI Chronic Disease Monitor — AI monitoring for chronic diseases per international guidelines.
 
-${getLanguageInstruction(lang)}
+LANGUAGE: ${getLanguageInstruction(lang)}
 
-# SUPPORTED: Diabetes T1/T2, Hypertension, Heart Failure, COPD, Asthma, CKD, RA, Thyroid disorders, Epilepsy, Depression
+SUPPORTED: Diabetes T1/T2, Hypertension, Heart Failure, COPD, Asthma, CKD, RA, Thyroid, Epilepsy, Depression
+GUIDELINES: ADA, AHA/ACC, ESC, GOLD, GINA, KDIGO, ACR/EULAR, ATA/ETA, ILAE, APA/NICE
 
-# MONITORING: Daily parameters, targets, alerts (🔴🟡🟢), trends, lifestyle advice
+ALERTS: 🔴 CRITICAL (call 103), 🟡 WARNING (see doctor 24-48h), 🟢 NORMAL
 
-# GUIDELINES: ADA, AHA/ACC, ESC, GOLD, GINA, KDIGO, ACR/EULAR, ATA/ETA, ILAE, APA/NICE
-
-# ALERT LEVELS:
-🔴 CRITICAL: Immediate medical attention (call 103)
-🟡 WARNING: See doctor within 24-48h
-🟢 NORMAL: Continue current plan
-
-# RULES:
-1. NEVER change medication doses
-2. ALWAYS flag critical values
-3. ALWAYS track trends
-4. Be encouraging and supportive
-`;
+RULES: Never change meds. Always flag critical values. Track trends. Be encouraging. Translate all terms.`;
 }
 
 function getDiagnosticPrompt(lang) {
-  return `
-# ROLE
-You are MedAI Diagnostic Analyzer — AI system for analyzing lab results and medical images.
+  return `You are MedAI Diagnostic Analyzer — AI for lab results and medical image analysis.
 
-${getLanguageInstruction(lang)}
+LANGUAGE: ${getLanguageInstruction(lang)}
 
-# GUIDELINE TRANSLATION: Translate ALL medical terms, reference ranges explanations, and diagnostic criteria names.
+LAB: CBC, BMP/CMP, LFT, Lipids, Coagulation, Thyroid, Diabetes, Hormones, Tumor markers, Autoimmune, Cardiac, Iron, Urinalysis, Vitamins. Use age/sex-specific ranges.
+IMAGING: X-ray, CT, MRI, Ultrasound analysis.
 
-# CAPABILITIES:
-A. LAB ANALYSIS: CBC, BMP/CMP, LFT, Lipids, Coagulation, Thyroid, Diabetes markers, Hormones, Tumor markers, Inflammatory/Autoimmune, Cardiac markers, Iron studies, Urinalysis, Vitamins
-B. IMAGING: X-ray, CT, MRI, Ultrasound
+METHODOLOGY: Compare to reference ranges, categorize severity, pattern recognition, correlate findings, suggest differentials, recommend follow-up.
 
-# METHODOLOGY:
-1. Compare each value to age/sex-specific reference range
-2. Categorize severity (mild/moderate/severe)
-3. Pattern recognition
-4. Correlate findings
-5. Suggest differential causes
-6. Recommend follow-up
+DISCLAIMER: Every response must state this is preliminary AI analysis — final interpretation by qualified professional.
 
-# REFERENCES: WHO/IFCC, Mayo Clinic Lab, Tietz, ACR Appropriateness Criteria
-
-# RULES:
-1. ALWAYS use age/sex-specific ranges
-2. ALWAYS identify critical values
-3. NEVER make definitive diagnosis
-4. ALWAYS recommend professional interpretation
-`;
+RULES: Always use age/sex ranges. Always identify critical values. Never make definitive diagnosis. Translate all terms.`;
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 3. KEYBOARD BUILDERS (Tilga qarab)
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD BUILDERS
+// ═══════════════════════════════════════════════════════════════
 
 function languageKeyboard() {
   return {
@@ -846,15 +617,13 @@ function languageKeyboard() {
           { text: '🇰🇿 Қазақша', callback_data: 'lang_kk' },
           { text: '🇰🇬 Кыргызча', callback_data: 'lang_ky' }
         ],
-        [
-          { text: '🇹🇯 Тоҷикӣ', callback_data: 'lang_tg' }
-        ]
+        [{ text: '🇹🇯 Тоҷикӣ', callback_data: 'lang_tg' }]
       ]
     }
   };
 }
 
-function mainMenuKeyboard(lang = 'uz') {
+function mainMenuKeyboard(lang) {
   return {
     reply_markup: {
       inline_keyboard: [
@@ -862,34 +631,28 @@ function mainMenuKeyboard(lang = 'uz') {
         [{ text: t('btn_drug', lang), callback_data: 'section_drug' }],
         [{ text: t('btn_chronic', lang), callback_data: 'section_chronic' }],
         [{ text: t('btn_diagnostic', lang), callback_data: 'section_diagnostic' }],
-        [
-          { text: t('btn_profile', lang), callback_data: 'profile_view' },
-          { text: t('btn_history', lang), callback_data: 'history_view' }
-        ],
-        [
-          { text: t('btn_premium', lang), callback_data: 'premium_menu' },
-          { text: t('btn_status', lang), callback_data: 'status_view' }
-        ],
+        [{ text: t('btn_profile', lang), callback_data: 'profile_view' }, { text: t('btn_history', lang), callback_data: 'history_view' }],
+        [{ text: t('btn_premium', lang), callback_data: 'premium_menu' }, { text: t('btn_status', lang), callback_data: 'status_view' }],
         [{ text: t('btn_lang', lang), callback_data: 'change_lang' }]
       ]
     }
   };
 }
 
-function paymentMethodKeyboard(lang = 'uz') {
+function paymentKeyboard(lang) {
   return {
     reply_markup: {
       inline_keyboard: [
-        [{ text: '💳 Telegram Pay (Visa/MasterCard)', callback_data: 'pay_telegram' }],
-        [{ text: '📱 Payme (Payme)', callback_data: 'pay_payme' }],
-        [{ text: '📱 Click (Click)', callback_data: 'pay_click' }],
+        [{ text: '💳 Telegram Pay (Visa/MC)', callback_data: 'pay_telegram' }],
+        [{ text: '📱 Payme', callback_data: 'pay_payme' }],
+        [{ text: '📱 Click', callback_data: 'pay_click' }],
         [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
       ]
     }
   };
 }
 
-function activeSessionKeyboard(section, lang = 'uz') {
+function sessionKeyboard(section, lang) {
   return {
     reply_markup: {
       inline_keyboard: [
@@ -900,80 +663,42 @@ function activeSessionKeyboard(section, lang = 'uz') {
   };
 }
 
-function diagnosticSubMenu(lang = 'uz') {
-  const labLabel = { uz: 'Qon', uz_cyr: 'Қон', ru: 'Кровь', en: 'Blood', kk: 'Қан', ky: 'Кан', tg: 'Хун' };
-  const urineLabel = { uz: 'Siydik', uz_cyr: 'Сийдик', ru: 'Моча', en: 'Urine', kk: 'Несеп', ky: 'Заара', tg: 'Пешоб' };
-  const hormoneLabel = { uz: 'Gormon', uz_cyr: 'Гормон', ru: 'Гормоны', en: 'Hormone', kk: 'Гормон', ky: 'Гормон', tg: 'Ҳормон' };
-  const otherLabel = { uz: 'Boshqa', uz_cyr: 'Бошқа', ru: 'Другое', en: 'Other', kk: 'Басқа', ky: 'Башка', tg: 'Дигар' };
-
+function diagnosticMenu(lang) {
   return {
     reply_markup: {
       inline_keyboard: [
-        [
-          { text: `🩸 ${labLabel[lang] || labLabel.uz}`, callback_data: 'diag_lab_blood' },
-          { text: `💧 ${urineLabel[lang] || urineLabel.uz}`, callback_data: 'diag_lab_urine' }
-        ],
-        [
-          { text: `🧬 ${hormoneLabel[lang] || hormoneLabel.uz}`, callback_data: 'diag_lab_hormone' },
-          { text: `📝 ${otherLabel[lang] || otherLabel.uz}`, callback_data: 'diag_lab_other' }
-        ],
-        [
-          { text: '🫁 Rentgen/X-ray', callback_data: 'diag_img_xray' },
-          { text: '🧲 MRT/MRI', callback_data: 'diag_img_mri' }
-        ],
-        [
-          { text: '💻 KT/CT', callback_data: 'diag_img_ct' },
-          { text: '📡 UZI/US', callback_data: 'diag_img_ultrasound' }
-        ],
+        [{ text: '🩸 Qon/Blood', callback_data: 'diag_lab_blood' }, { text: '💧 Siydik/Urine', callback_data: 'diag_lab_urine' }],
+        [{ text: '🧬 Gormon/Hormone', callback_data: 'diag_lab_hormone' }, { text: '📝 Boshqa/Other', callback_data: 'diag_lab_other' }],
+        [{ text: '🫁 Rentgen/X-ray', callback_data: 'diag_img_xray' }, { text: '🧲 MRT/MRI', callback_data: 'diag_img_mri' }],
+        [{ text: '💻 KT/CT', callback_data: 'diag_img_ct' }, { text: '📡 UZI/US', callback_data: 'diag_img_ultrasound' }],
         [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
       ]
     }
   };
 }
 
-function chronicDiseaseMenu(lang = 'uz') {
+function chronicMenu(lang) {
   return {
     reply_markup: {
       inline_keyboard: [
-        [
-          { text: '🩸 Diabet T2', callback_data: 'chronic_diabetes2' },
-          { text: '💉 Diabet T1', callback_data: 'chronic_diabetes1' }
-        ],
-        [
-          { text: '🫀 Gipertoniya', callback_data: 'chronic_hypertension' },
-          { text: '❤️ Heart Failure', callback_data: 'chronic_heartfailure' }
-        ],
-        [
-          { text: '🫁 COPD', callback_data: 'chronic_copd' },
-          { text: '🌬 Astma', callback_data: 'chronic_asthma' }
-        ],
-        [
-          { text: '🫘 CKD', callback_data: 'chronic_ckd' },
-          { text: '🦴 RA', callback_data: 'chronic_ra' }
-        ],
-        [
-          { text: '🦋 Hypothyroid', callback_data: 'chronic_hypothyroid' },
-          { text: '⚡ Hyperthyroid', callback_data: 'chronic_hyperthyroid' }
-        ],
-        [
-          { text: '🧠 Epilepsy', callback_data: 'chronic_epilepsy' },
-          { text: '😔 Depression', callback_data: 'chronic_depression' }
-        ],
+        [{ text: '🩸 Diabet T2', callback_data: 'chr_diabetes2' }, { text: '💉 Diabet T1', callback_data: 'chr_diabetes1' }],
+        [{ text: '🫀 Gipertoniya', callback_data: 'chr_hypertension' }, { text: '❤️ Heart Failure', callback_data: 'chr_heartfailure' }],
+        [{ text: '🫁 COPD', callback_data: 'chr_copd' }, { text: '🌬 Astma', callback_data: 'chr_asthma' }],
+        [{ text: '🫘 CKD', callback_data: 'chr_ckd' }, { text: '🦴 RA', callback_data: 'chr_ra' }],
+        [{ text: '🦋 Hypothyroid', callback_data: 'chr_hypothyroid' }, { text: '⚡ Hyperthyroid', callback_data: 'chr_hyperthyroid' }],
+        [{ text: '🧠 Epilepsy', callback_data: 'chr_epilepsy' }, { text: '😔 Depression', callback_data: 'chr_depression' }],
         [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
       ]
     }
   };
 }
 
-function chronicActiveKeyboard(diseaseKey, lang = 'uz') {
+function chronicActiveKB(diseaseKey, lang) {
   return {
     reply_markup: {
       inline_keyboard: [
-        [{ text: t('log_data', lang), callback_data: `chronic_log_${diseaseKey}` }],
-        [
-          { text: t('weekly_report', lang), callback_data: `chronic_report_weekly_${diseaseKey}` },
-          { text: t('monthly_report', lang), callback_data: `chronic_report_monthly_${diseaseKey}` }
-        ],
+        [{ text: t('log_data', lang), callback_data: `chrlog_${diseaseKey}` }],
+        [{ text: t('weekly_report', lang), callback_data: `chrrpt_weekly_${diseaseKey}` }, { text: t('monthly_report', lang), callback_data: `chrrpt_monthly_${diseaseKey}` }],
         [{ text: t('btn_end', lang), callback_data: 'end_chronic' }],
         [{ text: t('btn_main_menu', lang), callback_data: 'force_main_menu' }]
       ]
@@ -981,19 +706,32 @@ function chronicActiveKeyboard(diseaseKey, lang = 'uz') {
   };
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 4. DATABASE FUNCTIONS
-// ═══════════════════════════════════════════════════════════════════════
+function afterDiagKB(lang) {
+  return {
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: t('again_analyze', lang), callback_data: 'section_diagnostic' }],
+        [{ text: t('ask_doctor', lang), callback_data: 'section_doctor' }],
+        [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
+      ]
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DATABASE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
 
 async function getUser(userId, firstName, username) {
   try {
     let { data: user } = await supabase.from('users').select('*').eq('id', userId).single();
     if (!user) {
-      await supabase.from('users').insert({ id: userId, first_name: firstName, username, language: 'uz' });
-      const { data: newUser } = await supabase.from('users').select('*').eq('id', userId).single();
-      user = newUser;
+      await supabase.from('users').insert({ id: userId, first_name: firstName || 'User', username: username || null, language: 'uz' });
+      const { data: n } = await supabase.from('users').select('*').eq('id', userId).single();
+      user = n;
     }
     if (!user) return null;
+
     const today = new Date().toISOString().split('T')[0];
     if (user.last_reset !== today) {
       await supabase.from('users').update({ daily_count: 0, last_reset: today }).eq('id', userId);
@@ -1009,13 +747,22 @@ async function getUser(userId, firstName, username) {
 
 async function getUserLang(userId) {
   try {
-    const { data } = await supabase.from('users').select('language').eq('id', userId).single();
-    return data?.language || 'uz';
+    const { data, error } = await supabase.from('users').select('language').eq('id', userId).single();
+    if (error || !data || !data.language) return 'uz';
+    return data.language;
   } catch { return 'uz'; }
 }
 
 async function setUserLang(userId, lang) {
-  await supabase.from('users').update({ language: lang }).eq('id', userId);
+  try {
+    const { data } = await supabase.from('users').select('id').eq('id', userId).single();
+    if (!data) {
+      await supabase.from('users').insert({ id: userId, language: lang });
+    } else {
+      await supabase.from('users').update({ language: lang }).eq('id', userId);
+    }
+    return true;
+  } catch (err) { console.error('setUserLang:', err.message); return false; }
 }
 
 async function getUserProfile(userId) {
@@ -1032,33 +779,29 @@ async function updateUserField(userId, field, value) {
   catch { return false; }
 }
 
-async function incrementUsage(userId, currentCount) {
-  await supabase.from('users').update({ daily_count: currentCount + 1 }).eq('id', userId);
+async function incrementUsage(userId, count) {
+  await supabase.from('users').update({ daily_count: count + 1 }).eq('id', userId);
 }
 
 async function saveConsultation(userId, section, messages, summary, specialty) {
   try {
     await supabase.from('consultations').insert({
-      user_id: userId, section, status: 'completed',
-      messages, summary: summary?.substring(0, 5000), specialty,
-      completed_at: new Date().toISOString()
+      user_id: userId, section, status: 'completed', messages,
+      summary: summary?.substring(0, 5000), specialty, completed_at: new Date().toISOString()
     });
-  } catch (err) { console.error('saveConsultation:', err.message); }
+  } catch (e) { console.error('saveConsult:', e.message); }
 }
 
 async function saveChronicLog(userId, disease, data, feedback, alertLevel) {
   try {
-    await supabase.from('chronic_logs').insert({
-      user_id: userId, disease, data, ai_feedback: feedback, alert_level: alertLevel
-    });
-  } catch (err) { console.error('saveChronicLog:', err.message); }
+    await supabase.from('chronic_logs').insert({ user_id: userId, disease, data, ai_feedback: feedback, alert_level: alertLevel });
+  } catch (e) { console.error('saveChronicLog:', e.message); }
 }
 
-async function getChronicLogs(userId, disease, days = 7) {
+async function getChronicLogs(userId, disease, days) {
   try {
     const since = new Date(); since.setDate(since.getDate() - days);
-    const { data } = await supabase.from('chronic_logs').select('*')
-      .eq('user_id', userId).eq('disease', disease)
+    const { data } = await supabase.from('chronic_logs').select('*').eq('user_id', userId).eq('disease', disease)
       .gte('created_at', since.toISOString()).order('created_at', { ascending: true });
     return data || [];
   } catch { return []; }
@@ -1066,40 +809,34 @@ async function getChronicLogs(userId, disease, days = 7) {
 
 async function saveMedicalRecord(userId, type, title, data, fileId, analysis) {
   try {
-    await supabase.from('medical_records').insert({
-      user_id: userId, record_type: type, title, data, file_id: fileId, ai_analysis: analysis
-    });
-  } catch (err) { console.error('saveMedicalRecord:', err.message); }
+    await supabase.from('medical_records').insert({ user_id: userId, record_type: type, title, data, file_id: fileId, ai_analysis: analysis });
+  } catch (e) { console.error('saveMedRec:', e.message); }
 }
 
-async function getConsultationHistory(userId, limit = 10) {
+async function getHistory(userId) {
   try {
-    const { data } = await supabase.from('consultations')
-      .select('id,section,summary,created_at')
-      .eq('user_id', userId).order('created_at', { ascending: false }).limit(limit);
+    const { data } = await supabase.from('consultations').select('id,section,summary,created_at')
+      .eq('user_id', userId).order('created_at', { ascending: false }).limit(10);
     return data || [];
   } catch { return []; }
 }
 
-async function savePayment(userId, provider, amount, status, transactionId) {
-  try {
-    await supabase.from('payments').insert({
-      user_id: userId, provider, amount, status, transaction_id: transactionId
-    });
-  } catch (err) { console.error('savePayment:', err.message); }
+async function savePayment(userId, provider, amount, status, txId) {
+  try { await supabase.from('payments').insert({ user_id: userId, provider, amount, status, transaction_id: txId }); }
+  catch (e) { console.error('savePayment:', e.message); }
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 5. SESSION & HELPERS
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// SESSION & HELPERS
+// ═══════════════════════════════════════════════════════════════
 
 function getSession(userId) {
   if (!sessions[userId]) {
     sessions[userId] = {
       section: null, messages: [], specialty: null,
       chronicDisease: null, chronicKey: null,
-      diagnosticType: null, diagnosticSubType: null,
-      profileEditing: null, awaitingInput: null, messageCount: 0
+      diagType: null, diagSub: null,
+      profileEditing: null, awaitingInput: null, msgCount: 0
     };
   }
   return sessions[userId];
@@ -1109,37 +846,37 @@ function clearSession(userId) {
   sessions[userId] = {
     section: null, messages: [], specialty: null,
     chronicDisease: null, chronicKey: null,
-    diagnosticType: null, diagnosticSubType: null,
-    profileEditing: null, awaitingInput: null, messageCount: 0
+    diagType: null, diagSub: null,
+    profileEditing: null, awaitingInput: null, msgCount: 0
   };
 }
 
-async function sendToAI(systemPrompt, messages, maxTokens = 8192) {
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514', max_tokens: maxTokens,
-    temperature: 0.3, system: systemPrompt, messages
+async function sendToAI(sysPrompt, msgs, maxTokens) {
+  const res = await client.messages.create({
+    model: 'claude-sonnet-4-20250514', max_tokens: maxTokens || 8192,
+    temperature: 0.3, system: sysPrompt, messages: msgs
   });
-  return response.content[0].text;
+  return res.content[0].text;
 }
 
-async function sendToAIWithImage(systemPrompt, messages, imageBase64, mediaType = 'image/jpeg') {
-  const lastMsg = messages[messages.length - 1];
-  const otherMsgs = messages.slice(0, -1);
-  const imageMessage = {
+async function sendToAIImg(sysPrompt, msgs, imgB64, mediaType) {
+  const last = msgs[msgs.length - 1];
+  const prev = msgs.slice(0, -1);
+  const imgMsg = {
     role: 'user',
     content: [
-      { type: 'image', source: { type: 'base64', media_type: mediaType, data: imageBase64 } },
-      { type: 'text', text: lastMsg?.content || 'Analyze this medical image.' }
+      { type: 'image', source: { type: 'base64', media_type: mediaType || 'image/jpeg', data: imgB64 } },
+      { type: 'text', text: last?.content || 'Analyze this medical image.' }
     ]
   };
-  const response = await client.messages.create({
+  const res = await client.messages.create({
     model: 'claude-sonnet-4-20250514', max_tokens: 8192,
-    temperature: 0.2, system: systemPrompt, messages: [...otherMsgs, imageMessage]
+    temperature: 0.2, system: sysPrompt, messages: [...prev, imgMsg]
   });
-  return response.content[0].text;
+  return res.content[0].text;
 }
 
-async function sendLongMessage(chatId, text) {
+async function sendLong(chatId, text) {
   const max = 4096;
   if (text.length <= max) {
     try { await bot.sendMessage(chatId, text, { parse_mode: 'Markdown' }); }
@@ -1147,15 +884,13 @@ async function sendLongMessage(chatId, text) {
       for (let i = 0; i < text.length; i += max) await bot.sendMessage(chatId, text.substring(i, i + max));
     }}
   } else {
-    const chunks = [];
-    let rem = text;
+    const chunks = []; let rem = text;
     while (rem.length > 0) {
       if (rem.length <= max) { chunks.push(rem); break; }
       let idx = rem.lastIndexOf('\n\n', max);
       if (idx < max / 2) idx = rem.lastIndexOf('\n', max);
       if (idx < max / 2) idx = max;
-      chunks.push(rem.substring(0, idx));
-      rem = rem.substring(idx).trim();
+      chunks.push(rem.substring(0, idx)); rem = rem.substring(idx).trim();
     }
     for (const c of chunks) {
       try { await bot.sendMessage(chatId, c, { parse_mode: 'Markdown' }); }
@@ -1164,106 +899,84 @@ async function sendLongMessage(chatId, text) {
   }
 }
 
-function buildProfileContext(profile) {
-  if (!profile) return '';
-  const p = [];
-  if (profile.age) p.push(`Age: ${profile.age}`);
-  if (profile.gender) p.push(`Gender: ${profile.gender}`);
-  if (profile.weight) p.push(`Weight: ${profile.weight} kg`);
-  if (profile.height) p.push(`Height: ${profile.height} cm`);
-  if (profile.blood_type) p.push(`Blood type: ${profile.blood_type}`);
-  if (profile.allergies) p.push(`Allergies: ${profile.allergies}`);
-  if (profile.chronic_diseases) p.push(`Chronic diseases: ${profile.chronic_diseases}`);
-  if (profile.current_medications) p.push(`Current medications: ${profile.current_medications}`);
-  return p.length ? '\n\nPatient profile:\n' + p.join('\n') : '';
+function profileCtx(p) {
+  if (!p) return '';
+  const a = [];
+  if (p.age) a.push(`Age: ${p.age}`); if (p.gender) a.push(`Gender: ${p.gender}`);
+  if (p.weight) a.push(`Weight: ${p.weight}kg`); if (p.height) a.push(`Height: ${p.height}cm`);
+  if (p.blood_type) a.push(`Blood: ${p.blood_type}`); if (p.allergies) a.push(`Allergies: ${p.allergies}`);
+  if (p.chronic_diseases) a.push(`Chronic: ${p.chronic_diseases}`); if (p.current_medications) a.push(`Meds: ${p.current_medications}`);
+  return a.length ? '\n\nPatient profile:\n' + a.join('\n') : '';
 }
 
 function checkEmergency(text) {
-  const lower = text.toLowerCase();
-  const phrases = [
-    'hushimdan ketdim','nafas ololmayapman','qon ketayapti','kokrak ogrigi kuchli',
+  const l = text.toLowerCase();
+  return ['hushimdan ketdim','nafas ololmayapman','qon ketayapti','kokrak ogrigi kuchli',
     'yuzim qiyshaydi','gapira olmayapman','zaharlandim','o\'zimni o\'ldirmoqchiman',
     'haroratim 40','haroratim 41','tutqanoq','bolam nafas olmayapti','anafilaksiya',
     'потерял сознание','не могу дышать','кровотечение','сильная боль в груди',
     'перекосило лицо','отравился','хочу покончить','температура 40','судороги',
     'lost consciousness','cannot breathe','severe bleeding','severe chest pain',
     'face drooping','poisoned','suicidal','temperature 40','seizure',
-    'есімнен таныдым','тыныс ала алмаймын','қан кетіп жатыр',
-    'ушундан кеттим','дем ала албай жатам',
-    'ҳушёриро аз даст додам','нафас гирифта наметавонам'
-  ];
-  return phrases.some(p => lower.includes(p));
+    'есімнен таныдым','тын��с ала алмаймын','ҳушёриро аз даст додам'
+  ].some(p => l.includes(p));
 }
 
-function detectSpecialty(text) {
-  const lower = text.toLowerCase();
-  const map = {
-    cardiology: ['yurak','сердц','heart','жүрек','жүрөк','дил','qon bosim','давлени','pressure','ko\'krak og\'rig'],
-    endocrinology: ['qand','diabet','сахар','диабет','sugar','diabetes','gormon','гормон','hormone','tireoid','щитовид','thyroid'],
+function detectSpec(text) {
+  const l = text.toLowerCase();
+  const m = {
+    cardiology: ['yurak','сердц','heart','жүрек','жүрөк','дил','qon bosim','давлен','pressure'],
+    endocrinology: ['qand','diabet','сахар','sugar','diabetes','gormon','гормон','hormone','tireoid','щитовид','thyroid'],
     pulmonology: ['nafas','yo\'tal','дыхан','кашель','breath','cough','astma','астма','asthma','opka','лёгк','lung'],
-    gastroenterology: ['oshqozon','ichak','желуд','кишеч','stomach','intestin','jigar','печен','liver'],
+    gastroenterology: ['oshqozon','ichak','ж��луд','кишеч','stomach','intestin','jigar','печен','liver'],
     neurology: ['bosh og\'rig','головн','headache','migren','мигрен','migraine','tutqanoq','судорог','seizure'],
     nephrology: ['buyrak','почк','kidney','siydik','моч','urin'],
-    psychiatry: ['depressiya','депр��сси','depression','stress','стресс','uyqu','сон','sleep','тревог','anxiety']
+    psychiatry: ['depressiya','депресси','depression','stress','стресс','uyqu','сон','sleep']
   };
-  for (const [spec, kws] of Object.entries(map)) {
-    for (const kw of kws) { if (lower.includes(kw)) return spec; }
-  }
+  for (const [s, kw] of Object.entries(m)) { for (const k of kw) { if (l.includes(k)) return s; } }
   return null;
 }
 
-async function downloadFile(fileId) {
-  const file = await bot.getFile(fileId);
-  const url = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
-  return new Promise((resolve, reject) => {
-    https.get(url, res => {
-      const chunks = [];
-      res.on('data', c => chunks.push(c));
-      res.on('end', () => resolve(Buffer.concat(chunks)));
-      res.on('error', reject);
-    }).on('error', reject);
+async function dlFile(fileId) {
+  const f = await bot.getFile(fileId);
+  const url = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${f.file_path}`;
+  return new Promise((res, rej) => {
+    https.get(url, r => { const c = []; r.on('data', d => c.push(d)); r.on('end', () => res(Buffer.concat(c))); r.on('error', rej); }).on('error', rej);
   });
 }
 
 function checkLimit(user) { return user.is_premium || user.daily_count < 5; }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 6. CORE FUNCTIONS
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// CORE: startSection & endSession
+// ═══════════════════════════════════════════════════════════════
 
 async function startSection(chatId, userId, section) {
   const user = await getUser(userId);
   const lang = user?.language || 'uz';
   if (!user) return bot.sendMessage(chatId, t('error_general', lang));
-  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentMethodKeyboard(lang));
+  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
 
   clearSession(userId);
-  const session = getSession(userId);
-  session.section = section;
+  const s = getSession(userId);
+  s.section = section;
 
   const profile = await getUserProfile(userId);
-  const ctx = buildProfileContext(profile);
+  const ctx = profileCtx(profile);
+  const start = section === 'doctor'
+    ? `New consultation. Patient greeting.${ctx}` : `New drug consultation.${ctx}`;
+  s.messages.push({ role: 'user', content: start });
 
-  const prompts = { doctor: getDoctorPrompt, drug: getDrugPrompt };
-  const promptFn = prompts[section];
-  if (!promptFn) return;
-
-  const startMsg = section === 'doctor'
-    ? `New consultation started. Patient greeting.${ctx}`
-    : `New pharmaceutical consultation started.${ctx}`;
-
-  session.messages.push({ role: 'user', content: startMsg });
   await bot.sendMessage(chatId, t('preparing', lang));
-
   try {
-    const response = await sendToAI(promptFn(lang), session.messages);
-    session.messages.push({ role: 'assistant', content: response });
-    session.messageCount++;
+    const prompt = section === 'doctor' ? getDoctorPrompt(lang) : getDrugPrompt(lang);
+    const res = await sendToAI(prompt, s.messages);
+    s.messages.push({ role: 'assistant', content: res }); s.msgCount++;
     await incrementUsage(userId, user.daily_count);
-    await sendLongMessage(chatId, response);
-    await bot.sendMessage(chatId, t('type_question', lang), activeSessionKeyboard(section, lang));
-  } catch (err) {
-    console.error('startSection:', err.message);
+    await sendLong(chatId, res);
+    await bot.sendMessage(chatId, t('type_question', lang), sessionKeyboard(section, lang));
+  } catch (e) {
+    console.error('startSection:', e.message);
     await bot.sendMessage(chatId, t('error_general', lang), mainMenuKeyboard(lang));
     clearSession(userId);
   }
@@ -1271,56 +984,78 @@ async function startSection(chatId, userId, section) {
 
 async function endSession(chatId, userId) {
   const lang = await getUserLang(userId);
-  const session = getSession(userId);
-  if (!session.section || session.messages.length < 2) {
+  const s = getSession(userId);
+  if (!s.section || s.messages.length < 2) {
     clearSession(userId);
     return bot.sendMessage(chatId, t('no_active_session', lang), mainMenuKeyboard(lang));
   }
-
   await bot.sendMessage(chatId, t('summary_preparing', lang));
-
-  const promptFns = { doctor: getDoctorPrompt, drug: getDrugPrompt, chronic: getChronicPrompt, diagnostic: getDiagnosticPrompt };
-  const promptFn = promptFns[session.section] || getDoctorPrompt;
-
-  session.messages.push({
-    role: 'user',
-    content: 'End the consultation. Provide: 1) Summary 2) Key differentials 3) Recommended tests 4) Urgency level 5) Next steps 6) Guidelines used. Translate all terms.'
-  });
-
+  const prompts = { doctor: getDoctorPrompt, drug: getDrugPrompt, chronic: getChronicPrompt, diagnostic: getDiagnosticPrompt };
+  const fn = (prompts[s.section] || getDoctorPrompt)(lang);
+  s.messages.push({ role: 'user', content: 'End consultation. Provide summary, differentials, tests, urgency, next steps, guidelines used. Translate all terms.' });
   try {
-    const summary = await sendToAI(promptFn(lang), session.messages);
-    await saveConsultation(userId, session.section, session.messages, summary, session.specialty);
-    await sendLongMessage(chatId, summary);
+    const sum = await sendToAI(fn, s.messages);
+    await saveConsultation(userId, s.section, s.messages, sum, s.specialty);
+    await sendLong(chatId, sum);
     await bot.sendMessage(chatId, t('consult_ended', lang), {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }],
-          [{ text: t('btn_new_consult', lang), callback_data: 'section_doctor' }]
-        ]
-      }
+      reply_markup: { inline_keyboard: [
+        [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }],
+        [{ text: t('btn_new_consult', lang), callback_data: 'section_doctor' }]
+      ]}
     });
-  } catch (err) {
-    console.error('endSession:', err.message);
-    await bot.sendMessage(chatId, t('error_general', lang), mainMenuKeyboard(lang));
-  }
+  } catch (e) { console.error('endSession:', e.message); await bot.sendMessage(chatId, t('error_general', lang), mainMenuKeyboard(lang)); }
   clearSession(userId);
 }
 
-// ═══════════════════════════════════════════════════════════════════════
-// 7. COMMAND HANDLERS
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// PROFILE & HISTORY
+// ═══════════════════════════════════════════════════════════════
+
+async function showProfile(chatId, userId) {
+  const lang = await getUserLang(userId);
+  const p = await getUserProfile(userId);
+  const { data: u } = await supabase.from('users').select('first_name').eq('id', userId).single();
+  const e = '❌';
+  const text = `👤 *${u?.first_name || '?'}*\n\n🎂 ${p.age || e}\n⚧ ${p.gender || e}\n⚖️ ${p.weight ? p.weight + 'kg' : e}\n📏 ${p.height ? p.height + 'cm' : e}\n🩸 ${p.blood_type || e}\n⚠️ ${p.allergies || e}\n🏥 ${p.chronic_diseases || e}\n💊 ${p.current_medications || e}`;
+  await bot.sendMessage(chatId, text, {
+    parse_mode: 'Markdown',
+    reply_markup: { inline_keyboard: [
+      [{ text: '🎂 Age', callback_data: 'pedit_age' }, { text: '⚧ Gender', callback_data: 'pedit_gender' }],
+      [{ text: '⚖️ Weight', callback_data: 'pedit_weight' }, { text: '📏 Height', callback_data: 'pedit_height' }],
+      [{ text: '🩸 Blood', callback_data: 'pedit_blood' }, { text: '⚠️ Allergy', callback_data: 'pedit_allergies' }],
+      [{ text: '🏥 Chronic', callback_data: 'pedit_chronic' }, { text: '💊 Meds', callback_data: 'pedit_meds' }],
+      [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
+    ]}
+  });
+}
+
+async function showHistory(chatId, userId) {
+  const lang = await getUserLang(userId);
+  const h = await getHistory(userId);
+  if (!h.length) return bot.sendMessage(chatId, '📊 —', mainMenuKeyboard(lang));
+  const em = { doctor: '👨‍⚕️', drug: '💊', chronic: '📋', diagnostic: '🔬' };
+  let txt = '📊 *History:*\n\n';
+  for (const i of h) {
+    const d = new Date(i.created_at).toLocaleDateString();
+    txt += `${em[i.section] || '📄'} ${i.section} — ${d}\n${(i.summary || '').substring(0, 80)}...\n\n`;
+  }
+  await bot.sendMessage(chatId, txt, { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COMMAND HANDLERS
+// ═══════════════════════════════════════════════════════════════
 
 bot.onText(/\/start/, async (msg) => {
   await getUser(msg.from.id, msg.from.first_name, msg.from.username);
   clearSession(msg.from.id);
   const lang = await getUserLang(msg.from.id);
-  const welcomeFn = T.welcome[lang] || T.welcome.uz;
-  await bot.sendMessage(msg.chat.id, welcomeFn(msg.from.first_name), {
-    parse_mode: 'Markdown', ...mainMenuKeyboard(lang)
-  });
+  const wFn = T.welcome[lang] || T.welcome.uz;
+  await bot.sendMessage(msg.chat.id, wFn(msg.from.first_name), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
 });
 
 bot.onText(/\/lang/, async (msg) => {
+  await getUser(msg.from.id, msg.from.first_name, msg.from.username);
   const lang = await getUserLang(msg.from.id);
   await bot.sendMessage(msg.chat.id, t('choose_lang', lang), languageKeyboard());
 });
@@ -1337,111 +1072,82 @@ bot.onText(/\/drug/, async (msg) => { await startSection(msg.chat.id, msg.from.i
 bot.onText(/\/chronic/, async (msg) => {
   clearSession(msg.from.id);
   const lang = await getUserLang(msg.from.id);
-  await bot.sendMessage(msg.chat.id, t('chronic_title', lang), { parse_mode: 'Markdown', ...chronicDiseaseMenu(lang) });
+  await bot.sendMessage(msg.chat.id, t('chronic_title', lang), { parse_mode: 'Markdown', ...chronicMenu(lang) });
 });
 
 bot.onText(/\/diagnostic/, async (msg) => {
   clearSession(msg.from.id);
   const lang = await getUserLang(msg.from.id);
-  await bot.sendMessage(msg.chat.id, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticSubMenu(lang) });
+  await bot.sendMessage(msg.chat.id, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticMenu(lang) });
 });
 
 bot.onText(/\/premium/, async (msg) => {
   const lang = await getUserLang(msg.from.id);
-  await bot.sendMessage(msg.chat.id, t('premium_info', lang), { parse_mode: 'Markdown', ...paymentMethodKeyboard(lang) });
+  await bot.sendMessage(msg.chat.id, t('premium_info', lang), { parse_mode: 'Markdown', ...paymentKeyboard(lang) });
 });
 
 bot.onText(/\/status/, async (msg) => {
   const user = await getUser(msg.from.id, msg.from.first_name, msg.from.username);
   const lang = user?.language || 'uz';
   if (!user) return bot.sendMessage(msg.chat.id, t('error_general', lang));
-  const status = user.is_premium ? '💎 Premium' : '🆓 Free';
-  const count = user.is_premium ? '∞' : `${user.daily_count}/5`;
-  const until = user.premium_until ? new Date(user.premium_until).toLocaleDateString() : null;
-  const textFn = T.status_text[lang] || T.status_text.uz;
-  await bot.sendMessage(msg.chat.id, textFn(status, count, until), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
+  const st = user.is_premium ? '💎 Premium' : '🆓 Free';
+  const cnt = user.is_premium ? '∞' : `${user.daily_count}/5`;
+  const unt = user.premium_until ? new Date(user.premium_until).toLocaleDateString() : null;
+  const fn = T.status_text[lang] || T.status_text.uz;
+  await bot.sendMessage(msg.chat.id, fn(st, cnt, unt), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
 });
 
 bot.onText(/\/end/, async (msg) => {
-  const session = getSession(msg.from.id);
-  if (session.section) { await endSession(msg.chat.id, msg.from.id); }
-  else {
-    const lang = await getUserLang(msg.from.id);
-    await bot.sendMessage(msg.chat.id, t('no_active_session', lang), mainMenuKeyboard(lang));
-  }
+  const s = getSession(msg.from.id);
+  if (s.section) await endSession(msg.chat.id, msg.from.id);
+  else { const lang = await getUserLang(msg.from.id); await bot.sendMessage(msg.chat.id, t('no_active_session', lang), mainMenuKeyboard(lang)); }
 });
 
 bot.onText(/\/profile/, async (msg) => { await showProfile(msg.chat.id, msg.from.id); });
 bot.onText(/\/history/, async (msg) => { await showHistory(msg.chat.id, msg.from.id); });
 
-async function showProfile(chatId, userId) {
-  const lang = await getUserLang(userId);
-  const p = await getUserProfile(userId);
-  const { data: u } = await supabase.from('users').select('first_name').eq('id', userId).single();
-  const labels = {
-    uz: { name: 'Ism', age: 'Yosh', gender: 'Jins', weight: 'Vazn', height: "Bo'y", blood: 'Qon guruhi', allergy: 'Allergiya', chronic: 'Surunkali', meds: 'Dorilar', empty: 'Kiritilmagan', edit: 'Tahrirlash' },
-    ru: { name: 'Имя', age: 'Возраст', gender: 'Пол', weight: 'Вес', height: 'Рост', blood: 'Группа крови', allergy: 'Аллергии', chronic: 'Хронические', meds: 'Лекарства', empty: 'Не указано', edit: 'Редактировать' },
-    en: { name: 'Name', age: 'Age', gender: 'Gender', weight: 'Weight', height: 'Height', blood: 'Blood type', allergy: 'Allergies', chronic: 'Chronic', meds: 'Medications', empty: 'Not set', edit: 'Edit' }
-  };
-  const l = labels[lang] || labels[lang === 'uz_cyr' ? 'ru' : 'uz'] || labels.uz;
-  const e = `❌ ${l.empty}`;
-  const text = `👤 *${l.name}:* ${u?.first_name || '?'}
-🎂 *${l.age}:* ${p.age || e}
-⚧ *${l.gender}:* ${p.gender || e}
-⚖️ *${l.weight}:* ${p.weight ? p.weight + ' kg' : e}
-📏 *${l.height}:* ${p.height ? p.height + ' cm' : e}
-🩸 *${l.blood}:* ${p.blood_type || e}
-⚠️ *${l.allergy}:* ${p.allergies || e}
-🏥 *${l.chronic}:* ${p.chronic_diseases || e}
-💊 *${l.meds}:* ${p.current_medications || e}`;
+bot.onText(/\/help/, async (msg) => {
+  const lang = await getUserLang(msg.from.id);
+  await bot.sendMessage(msg.chat.id, `ℹ️ /start /menu /doctor /drug /chronic /diagnostic /profile /history /end /premium /status /lang /help`, mainMenuKeyboard(lang));
+});
 
-  await bot.sendMessage(chatId, text, {
-    parse_mode: 'Markdown',
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: `🎂 ${l.age}`, callback_data: 'profile_edit_age' }, { text: `⚧ ${l.gender}`, callback_data: 'profile_edit_gender' }],
-        [{ text: `⚖️ ${l.weight}`, callback_data: 'profile_edit_weight' }, { text: `📏 ${l.height}`, callback_data: 'profile_edit_height' }],
-        [{ text: `🩸 ${l.blood}`, callback_data: 'profile_edit_blood' }, { text: `⚠️ ${l.allergy}`, callback_data: 'profile_edit_allergies' }],
-        [{ text: `🏥 ${l.chronic}`, callback_data: 'profile_edit_chronic' }, { text: `💊 ${l.meds}`, callback_data: 'profile_edit_meds' }],
-        [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
-      ]
-    }
-  });
-}
-
-async function showHistory(chatId, userId) {
-  const lang = await getUserLang(userId);
-  const history = await getConsultationHistory(userId);
-  if (!history.length) return bot.sendMessage(chatId, '📊 —', mainMenuKeyboard(lang));
-  const emojis = { doctor: '👨‍⚕️', drug: '💊', chronic: '📋', diagnostic: '🔬' };
-  let text = '📊 *History:*\n\n';
-  for (const h of history) {
-    const d = new Date(h.created_at).toLocaleDateString();
-    text += `${emojis[h.section] || '📄'} ${h.section} — ${d}\n${(h.summary || '').substring(0, 80)}...\n\n`;
-  }
-  await bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// 8. CALLBACK QUERY HANDLER
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// CALLBACK QUERY HANDLER — ASOSIY
+// ═══════════════════════════════════════════════════════════════
 
 bot.on('callback_query', async (query) => {
   const chatId = query.message.chat.id;
   const userId = query.from.id;
   const data = query.data;
-  await bot.answerCallbackQuery(query.id);
-  const lang = await getUserLang(userId);
 
-  // ── Til tanlash ──
+  await bot.answerCallbackQuery(query.id);
+
+  // HAR DOIM avval user yaratamiz
+  await getUser(userId, query.from.first_name, query.from.username);
+
+  // ══ TIL TANLASH (eng birinchi) ══
+  if (data === 'change_lang') {
+    const lang = await getUserLang(userId);
+    return bot.sendMessage(chatId, t('choose_lang', lang), languageKeyboard());
+  }
+
   if (data.startsWith('lang_')) {
     const newLang = data.replace('lang_', '');
-    await setUserLang(userId, newLang);
-    await bot.sendMessage(chatId, t('lang_set', newLang), mainMenuKeyboard(newLang));
+    const ok = await setUserLang(userId, newLang);
+    if (ok) {
+      await bot.sendMessage(chatId, t('lang_set', newLang));
+      const wFn = T.welcome[newLang] || T.welcome.uz;
+      await bot.sendMessage(chatId, wFn(query.from.first_name), { parse_mode: 'Markdown', ...mainMenuKeyboard(newLang) });
+    } else {
+      await bot.sendMessage(chatId, '❌ Error. Try again.', languageKeyboard());
+    }
     return;
   }
 
-  if (data === 'change_lang') return bot.sendMessage(chatId, t('choose_lang', lang), languageKeyboard());
+  // Endi tilni olamiz
+  const lang = await getUserLang(userId);
+
+  // ══ MENYU ══
   if (data === 'main_menu' || data === 'force_main_menu') {
     if (data === 'force_main_menu') {
       const s = getSession(userId);
@@ -1450,500 +1156,336 @@ bot.on('callback_query', async (query) => {
     clearSession(userId);
     return bot.sendMessage(chatId, t('select_section', lang), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
   }
+
   if (data === 'ignore') return;
 
-  // ── Bo'limlar ──
+  // ══ BO'LIMLAR ══
   if (data === 'section_doctor') return startSection(chatId, userId, 'doctor');
   if (data === 'section_drug') return startSection(chatId, userId, 'drug');
-  if (data === 'section_chronic') {
-    clearSession(userId);
-    return bot.sendMessage(chatId, t('chronic_title', lang), { parse_mode: 'Markdown', ...chronicDiseaseMenu(lang) });
-  }
-  if (data === 'section_diagnostic') {
-    clearSession(userId);
-    return bot.sendMessage(chatId, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticSubMenu(lang) });
-  }
+  if (data === 'section_chronic') { clearSession(userId); return bot.sendMessage(chatId, t('chronic_title', lang), { parse_mode: 'Markdown', ...chronicMenu(lang) }); }
+  if (data === 'section_diagnostic') { clearSession(userId); return bot.sendMessage(chatId, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticMenu(lang) }); }
   if (data.startsWith('end_')) return endSession(chatId, userId);
 
-  // ── Premium & Payment ──
-  if (data === 'premium_menu') {
-    return bot.sendMessage(chatId, t('premium_info', lang), { parse_mode: 'Markdown', ...paymentMethodKeyboard(lang) });
-  }
+  // ══ PREMIUM & TO'LOV ══
+  if (data === 'premium_menu') return bot.sendMessage(chatId, t('premium_info', lang), { parse_mode: 'Markdown', ...paymentKeyboard(lang) });
 
   if (data === 'pay_telegram') {
     try {
-      return bot.sendInvoice(chatId, t('payment_title', lang), t('payment_desc', lang),
-        'premium_1month', process.env.PAYMENT_TOKEN, 'UZS',
-        [{ label: 'Premium 1 month', amount: 4000000 }]);
-    } catch { return bot.sendMessage(chatId, '💳 Telegram Pay unavailable. Try Payme or Click.', paymentMethodKeyboard(lang)); }
+      return bot.sendInvoice(chatId, t('payment_title', lang), t('payment_desc', lang), 'premium_1month', process.env.PAYMENT_TOKEN, 'UZS', [{ label: 'Premium', amount: 4000000 }]);
+    } catch { return bot.sendMessage(chatId, '💳 Telegram Pay unavailable.', paymentKeyboard(lang)); }
   }
 
   if (data === 'pay_payme') {
-    const paymeUrl = `https://checkout.paycom.uz/${Buffer.from(JSON.stringify({
-      m: process.env.PAYME_MERCHANT_ID || 'YOUR_MERCHANT_ID',
-      ac: { user_id: userId },
-      a: 4000000,
-      c: `https://t.me/${(await bot.getMe()).username}`
-    })).toString('base64')}`;
-
+    const url = `https://checkout.paycom.uz/${Buffer.from(JSON.stringify({ m: process.env.PAYME_MERCHANT_ID || 'YOUR_ID', ac: { user_id: userId }, a: 4000000 })).toString('base64')}`;
     await savePayment(userId, 'payme', 4000000, 'pending', null);
-    return bot.sendMessage(chatId,
-      `📱 *Payme orqali to'lash:*\n\n💳 Summa: 40,000 so'm\n\nQuyidagi tugmani bosing:`,
-      {
-        parse_mode: 'Markdown',
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📱 Payme da to\'lash', url: paymeUrl }],
-            [{ text: '✅ To\'ladim', callback_data: 'payment_confirm_payme' }],
-            [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
-          ]
-        }
-      }
-    );
+    return bot.sendMessage(chatId, `📱 *Payme*\n💳 40,000 so'm`, {
+      parse_mode: 'Markdown',
+      reply_markup: { inline_keyboard: [[{ text: '📱 Payme', url }], [{ text: '✅ To\'ladim', callback_data: 'payconfirm_payme' }], [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]] }
+    });
   }
 
   if (data === 'pay_click') {
-    const clickUrl = `https://my.click.uz/services/pay?service_id=${process.env.CLICK_SERVICE_ID || 'YOUR_SERVICE_ID'}&merchant_id=${process.env.CLICK_MERCHANT_ID || 'YOUR_MERCHANT_ID'}&amount=40000&transaction_param=${userId}`;
-
+    const url = `https://my.click.uz/services/pay?service_id=${process.env.CLICK_SERVICE_ID || 'ID'}&merchant_id=${process.env.CLICK_MERCHANT_ID || 'ID'}&amount=40000&transaction_param=${userId}`;
     await savePayment(userId, 'click', 4000000, 'pending', null);
-    return bot.sendMessage(chatId,
-      `📱 *Click orqali to'lash:*\n\n💳 Summa: 40,000 so'm\n\nQuyidagi tugmani bosing:`,
-      {
-        parse_mode: 'Markdown',
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📱 Click da to\'lash', url: clickUrl }],
-            [{ text: '✅ To\'ladim', callback_data: 'payment_confirm_click' }],
-            [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
-          ]
-        }
-      }
-    );
+    return bot.sendMessage(chatId, `📱 *Click*\n💳 40,000 so'm`, {
+      parse_mode: 'Markdown',
+      reply_markup: { inline_keyboard: [[{ text: '📱 Click', url }], [{ text: '✅ To\'ladim', callback_data: 'payconfirm_click' }], [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]] }
+    });
   }
 
-  if (data === 'payment_confirm_payme' || data === 'payment_confirm_click') {
-    const provider = data.includes('payme') ? 'Payme' : 'Click';
-    // TODO: Bu yerda haqiqiy to'lovni tekshirish kerak (Payme/Click API webhook orqali)
-    // Hozircha admin tasdiqlashi uchun xabar
+  if (data.startsWith('payconfirm_')) {
+    const prov = data.includes('payme') ? 'Payme' : 'Click';
     const adminId = process.env.ADMIN_ID;
     if (adminId) {
-      await bot.sendMessage(adminId,
-        `💳 TO'LOV TASDIQLASH:\n\nUser ID: ${userId}\nProvider: ${provider}\nSumma: 40,000\n\nTasdiqlash:`,
-        {
-          reply_markup: {
-            inline_keyboard: [
-              [{ text: '✅ Tasdiqlash', callback_data: `admin_confirm_${userId}` }],
-              [{ text: '❌ Rad etish', callback_data: `admin_reject_${userId}` }]
-            ]
-          }
-        }
-      );
+      await bot.sendMessage(adminId, `💳 ${prov}\nUser: ${userId}\n40,000 so'm`, {
+        reply_markup: { inline_keyboard: [[{ text: '✅', callback_data: `admok_${userId}` }, { text: '❌', callback_data: `admno_${userId}` }]] }
+      });
     }
-    return bot.sendMessage(chatId,
-      `⏳ To'lovingiz tekshirilmoqda...\n\n${provider} orqali to'lov qilgan bo'lsangiz, tez orada Premium faollashtiriladi.\n\nAdmin bilan bog'lanish: @medai_admin`,
-      mainMenuKeyboard(lang));
+    return bot.sendMessage(chatId, '⏳ Tekshirilmoqda... / Checking...', mainMenuKeyboard(lang));
   }
 
-  // Admin to'lovni tasdiqlash
-  if (data.startsWith('admin_confirm_')) {
-    const targetUserId = parseInt(data.replace('admin_confirm_', ''));
-    const premiumUntil = new Date();
-    premiumUntil.setMonth(premiumUntil.getMonth() + 1);
-    await supabase.from('users').update({ is_premium: true, premium_until: premiumUntil.toISOString() }).eq('id', targetUserId);
-    await savePayment(targetUserId, 'manual', 4000000, 'completed', `admin_${Date.now()}`);
-    const targetLang = await getUserLang(targetUserId);
-    const untilStr = premiumUntil.toLocaleDateString();
-    const successFn = T.payment_success[targetLang] || T.payment_success.uz;
-    await bot.sendMessage(targetUserId, successFn(untilStr), mainMenuKeyboard(targetLang));
-    await bot.sendMessage(query.message.chat.id, `✅ Premium faollashtirildi: ${targetUserId}`);
-    return;
+  if (data.startsWith('admok_')) {
+    const tid = parseInt(data.replace('admok_', ''));
+    const until = new Date(); until.setMonth(until.getMonth() + 1);
+    await supabase.from('users').update({ is_premium: true, premium_until: until.toISOString() }).eq('id', tid);
+    await savePayment(tid, 'manual', 4000000, 'completed', `adm_${Date.now()}`);
+    const tl = await getUserLang(tid);
+    const fn = T.payment_success[tl] || T.payment_success.uz;
+    await bot.sendMessage(tid, fn(until.toLocaleDateString()), mainMenuKeyboard(tl));
+    return bot.sendMessage(chatId, `✅ Done: ${tid}`);
+  }
+  if (data.startsWith('admno_')) {
+    const tid = parseInt(data.replace('admno_', ''));
+    await bot.sendMessage(tid, '❌ Payment rejected. @medai_admin');
+    return bot.sendMessage(chatId, `❌ Rejected: ${tid}`);
   }
 
-  if (data.startsWith('admin_reject_')) {
-    const targetUserId = parseInt(data.replace('admin_reject_', ''));
-    await bot.sendMessage(targetUserId, '❌ To\'lov tasdiqlanmadi. Admin bilan bog\'laning: @medai_admin');
-    await bot.sendMessage(query.message.chat.id, `❌ Rad etildi: ${targetUserId}`);
-    return;
-  }
-
+  // ══ STATUS & PROFILE & HISTORY ══
   if (data === 'status_view') {
     const user = await getUser(userId);
-    const status = user?.is_premium ? '💎 Premium' : '🆓 Free';
-    const count = user?.is_premium ? '∞' : `${user?.daily_count || 0}/5`;
-    const until = user?.premium_until ? new Date(user.premium_until).toLocaleDateString() : null;
-    const textFn = T.status_text[lang] || T.status_text.uz;
-    return bot.sendMessage(chatId, textFn(status, count, until), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
+    const st = user?.is_premium ? '💎' : '🆓'; const cnt = user?.is_premium ? '∞' : `${user?.daily_count || 0}/5`;
+    const unt = user?.premium_until ? new Date(user.premium_until).toLocaleDateString() : null;
+    const fn = T.status_text[lang] || T.status_text.uz;
+    return bot.sendMessage(chatId, fn(st, cnt, unt), { parse_mode: 'Markdown', ...mainMenuKeyboard(lang) });
   }
-
   if (data === 'profile_view') return showProfile(chatId, userId);
   if (data === 'history_view') return showHistory(chatId, userId);
 
-  // ── Profil tahrirlash ──
-  if (data.startsWith('profile_edit_')) {
-    const field = data.replace('profile_edit_', '');
-    const session = getSession(userId);
-
-    if (field === 'gender') {
-      return bot.sendMessage(chatId, '⚧', {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '👨 Erkak/Male/Мужской', callback_data: 'pset_gender_erkak' },
-             { text: '👩 Ayol/Female/Женский', callback_data: 'pset_gender_ayol' }]
-          ]
-        }
-      });
-    }
-    if (field === 'blood') {
-      return bot.sendMessage(chatId, '🩸', {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'I(O)+', callback_data: 'pset_blood_O+' }, { text: 'I(O)-', callback_data: 'pset_blood_O-' }],
-            [{ text: 'II(A)+', callback_data: 'pset_blood_A+' }, { text: 'II(A)-', callback_data: 'pset_blood_A-' }],
-            [{ text: 'III(B)+', callback_data: 'pset_blood_B+' }, { text: 'III(B)-', callback_data: 'pset_blood_B-' }],
-            [{ text: 'IV(AB)+', callback_data: 'pset_blood_AB+' }, { text: 'IV(AB)-', callback_data: 'pset_blood_AB-' }]
-          ]
-        }
-      });
-    }
-
-    session.profileEditing = field;
-    session.section = null;
-    const prompts = {
-      age: '🎂 Age/Yosh (1-150):', weight: '⚖️ Weight/Vazn (kg):', height: '📏 Height/Bo\'y (cm):',
-      allergies: '⚠️ Allergies:', chronic: '🏥 Chronic diseases:', meds: '💊 Medications:'
-    };
-    return bot.sendMessage(chatId, prompts[field] || 'Enter value:');
-  }
-
-  if (data.startsWith('pset_gender_')) {
-    const v = data.replace('pset_gender_', '');
-    await updateUserField(userId, 'gender', v);
-    return bot.sendMessage(chatId, `✅ ${v}`, mainMenuKeyboard(lang));
-  }
-  if (data.startsWith('pset_blood_')) {
-    const v = data.replace('pset_blood_', '');
-    await updateUserField(userId, 'blood_type', v);
-    return bot.sendMessage(chatId, `✅ ${v}`, mainMenuKeyboard(lang));
-  }
-
-  // ── Surunkali kasalliklar ──
-  const diseaseMap = {
-    chronic_diabetes2: 'Diabetes mellitus Type 2', chronic_diabetes1: 'Diabetes mellitus Type 1',
-    chronic_hypertension: 'Hypertension', chronic_heartfailure: 'Heart Failure',
-    chronic_copd: 'COPD', chronic_asthma: 'Bronchial Asthma',
-    chronic_ckd: 'Chronic Kidney Disease', chronic_ra: 'Rheumatoid Arthritis',
-    chronic_hypothyroid: 'Hypothyroidism', chronic_hyperthyroid: 'Hyperthyroidism',
-    chronic_epilepsy: 'Epilepsy', chronic_depression: 'Depression'
-  };
-
-  if (diseaseMap[data]) {
-    const user = await getUser(userId);
-    if (!user || !checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
-
-    clearSession(userId);
+  // ══ PROFIL TAHRIRLASH ══
+  if (data.startsWith('pedit_')) {
+    const f = data.replace('pedit_', '');
     const s = getSession(userId);
-    s.section = 'chronic'; s.chronicDisease = diseaseMap[data]; s.chronicKey = data;
+    if (f === 'gender') return bot.sendMessage(chatId, '⚧', { reply_markup: { inline_keyboard: [[{ text: '👨 Erkak/Male', callback_data: 'pset_g_erkak' }, { text: '👩 Ayol/Female', callback_data: 'pset_g_ayol' }]] } });
+    if (f === 'blood') return bot.sendMessage(chatId, '🩸', { reply_markup: { inline_keyboard: [
+      [{ text: 'O+', callback_data: 'pset_b_O+' }, { text: 'O-', callback_data: 'pset_b_O-' }],
+      [{ text: 'A+', callback_data: 'pset_b_A+' }, { text: 'A-', callback_data: 'pset_b_A-' }],
+      [{ text: 'B+', callback_data: 'pset_b_B+' }, { text: 'B-', callback_data: 'pset_b_B-' }],
+      [{ text: 'AB+', callback_data: 'pset_b_AB+' }, { text: 'AB-', callback_data: 'pset_b_AB-' }]
+    ] } });
+    s.profileEditing = f; s.section = null;
+    const pr = { age: '🎂 (1-150):', weight: '⚖️ (kg):', height: '📏 (cm):', allergies: '⚠️:', chronic: '🏥:', meds: '💊:' };
+    return bot.sendMessage(chatId, pr[f] || 'Enter:');
+  }
+  if (data.startsWith('pset_g_')) { await updateUserField(userId, 'gender', data.replace('pset_g_', '')); return bot.sendMessage(chatId, '✅', mainMenuKeyboard(lang)); }
+  if (data.startsWith('pset_b_')) { await updateUserField(userId, 'blood_type', data.replace('pset_b_', '')); return bot.sendMessage(chatId, '✅', mainMenuKeyboard(lang)); }
 
-    const profile = await getUserProfile(userId);
-    s.messages.push({
-      role: 'user',
-      content: `Patient starts monitoring for ${diseaseMap[data]}.${buildProfileContext(profile)}\n\nSet up monitoring plan: daily parameters, targets, alert thresholds, schedule, lifestyle advice.`
-    });
-
+  // ══ SURUNKALI KASALLIKLAR ══
+  const dMap = {
+    chr_diabetes2: 'Diabetes T2', chr_diabetes1: 'Diabetes T1', chr_hypertension: 'Hypertension',
+    chr_heartfailure: 'Heart Failure', chr_copd: 'COPD', chr_asthma: 'Asthma',
+    chr_ckd: 'CKD', chr_ra: 'RA', chr_hypothyroid: 'Hypothyroidism',
+    chr_hyperthyroid: 'Hyperthyroidism', chr_epilepsy: 'Epilepsy', chr_depression: 'Depression'
+  };
+  if (dMap[data]) {
+    const user = await getUser(userId);
+    if (!user || !checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
+    clearSession(userId); const s = getSession(userId);
+    s.section = 'chronic'; s.chronicDisease = dMap[data]; s.chronicKey = data;
+    const p = await getUserProfile(userId);
+    s.messages.push({ role: 'user', content: `Start monitoring ${dMap[data]}.${profileCtx(p)} Set up plan.` });
     await bot.sendMessage(chatId, t('preparing', lang));
     try {
-      const response = await sendToAI(getChronicPrompt(lang), s.messages);
-      s.messages.push({ role: 'assistant', content: response });
+      const r = await sendToAI(getChronicPrompt(lang), s.messages);
+      s.messages.push({ role: 'assistant', content: r });
       await incrementUsage(userId, user.daily_count);
-      await sendLongMessage(chatId, response);
-      await bot.sendMessage(chatId, '✅', chronicActiveKeyboard(data, lang));
-    } catch (err) {
-      console.error('chronic start:', err.message);
-      await bot.sendMessage(chatId, t('error_general', lang), mainMenuKeyboard(lang));
-      clearSession(userId);
-    }
+      await sendLong(chatId, r);
+      await bot.sendMessage(chatId, '✅', chronicActiveKB(data, lang));
+    } catch (e) { console.error(e.message); await bot.sendMessage(chatId, t('error_general', lang), mainMenuKeyboard(lang)); clearSession(userId); }
     return;
   }
 
-  // Chronic log
-  if (data.startsWith('chronic_log_')) {
+  if (data.startsWith('chrlog_')) {
     const s = getSession(userId);
-    if (!s.chronicDisease) return bot.sendMessage(chatId, t('error_general', lang), chronicDiseaseMenu(lang));
+    if (!s.chronicDisease) return bot.sendMessage(chatId, t('error_general', lang), chronicMenu(lang));
     s.awaitingInput = 'chronic_data';
-    const enterFn = T.chronic_enter_data[lang] || T.chronic_enter_data.uz;
-    return bot.sendMessage(chatId, enterFn(s.chronicDisease), { parse_mode: 'Markdown' });
+    const fn = T.chronic_enter_data[lang] || T.chronic_enter_data.uz;
+    return bot.sendMessage(chatId, fn(s.chronicDisease), { parse_mode: 'Markdown' });
   }
 
-  // Chronic report
-  if (data.startsWith('chronic_report_')) {
+  if (data.startsWith('chrrpt_')) {
     const s = getSession(userId);
     if (!s.chronicDisease) return;
     const user = await getUser(userId);
     if (!user || !checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
-    const parts = data.split('_');
-    const period = parts[2];
+    const period = data.includes('weekly') ? 'weekly' : 'monthly';
     const days = period === 'weekly' ? 7 : 30;
     await bot.sendMessage(chatId, t('preparing', lang));
     const logs = await getChronicLogs(userId, s.chronicDisease, days);
-    if (!logs.length) return bot.sendMessage(chatId, '📊 No data yet.', chronicActiveKeyboard(s.chronicKey, lang));
-    s.messages.push({ role: 'user', content: `Generate ${period} report for ${s.chronicDisease}.\n\nData:\n${JSON.stringify(logs)}` });
+    if (!logs.length) return bot.sendMessage(chatId, '📊 No data.', chronicActiveKB(s.chronicKey, lang));
+    s.messages.push({ role: 'user', content: `${period} report for ${s.chronicDisease}.\nData: ${JSON.stringify(logs)}` });
     try {
-      const response = await sendToAI(getChronicPrompt(lang), s.messages);
-      s.messages.push({ role: 'assistant', content: response });
-      await incrementUsage(userId, user.daily_count);
-      await sendLongMessage(chatId, response);
+      const r = await sendToAI(getChronicPrompt(lang), s.messages); s.messages.push({ role: 'assistant', content: r });
+      await incrementUsage(userId, user.daily_count); await sendLong(chatId, r);
     } catch { await bot.sendMessage(chatId, t('error_general', lang)); }
     return;
   }
 
-  // ── Diagnostika ──
+  // ══ DIAGNOSTIKA ══
   if (data.startsWith('diag_lab_') || data.startsWith('diag_img_')) {
-    clearSession(userId);
-    const s = getSession(userId);
-    s.section = 'diagnostic';
-
+    clearSession(userId); const s = getSession(userId); s.section = 'diagnostic';
     if (data.startsWith('diag_lab_')) {
-      s.diagnosticType = 'lab'; s.diagnosticSubType = data.replace('diag_lab_', '');
-      s.awaitingInput = 'lab_results';
+      s.diagType = 'lab'; s.diagSub = data.replace('diag_lab_', ''); s.awaitingInput = 'lab_results';
       return bot.sendMessage(chatId, t('send_lab_text', lang));
     }
-    if (data.startsWith('diag_img_')) {
-      s.diagnosticType = 'imaging'; s.diagnosticSubType = data.replace('diag_img_', '');
-      s.awaitingInput = 'medical_image';
-      return bot.sendMessage(chatId, t('send_image', lang));
-    }
+    s.diagType = 'imaging'; s.diagSub = data.replace('diag_img_', ''); s.awaitingInput = 'medical_image';
+    return bot.sendMessage(chatId, t('send_image', lang));
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// 9. PAYMENT HANDLERS (Telegram native)
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// PAYMENT (Telegram native)
+// ═══════════════════════════════════════════════════════════════
 
 bot.on('pre_checkout_query', q => bot.answerPreCheckoutQuery(q.id, true));
-
 bot.on('successful_payment', async (msg) => {
   const userId = msg.from.id;
   const lang = await getUserLang(userId);
-  const until = new Date();
-  until.setMonth(until.getMonth() + 1);
+  const until = new Date(); until.setMonth(until.getMonth() + 1);
   await supabase.from('users').update({ is_premium: true, premium_until: until.toISOString() }).eq('id', userId);
-  await savePayment(userId, 'telegram', 4000000, 'completed', msg.successful_payment.telegram_payment_charge_id);
+  await savePayment(userId, 'telegram', 4000000, 'completed', msg.successful_payment?.telegram_payment_charge_id);
   const fn = T.payment_success[lang] || T.payment_success.uz;
   await bot.sendMessage(msg.chat.id, fn(until.toLocaleDateString()), mainMenuKeyboard(lang));
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// 10. PHOTO HANDLER
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// PHOTO HANDLER
+// ═══════════════════════════════════════════════════════════════
 
 bot.on('photo', async (msg) => {
-  const chatId = msg.chat.id;
-  const userId = msg.from.id;
+  const chatId = msg.chat.id, userId = msg.from.id;
   const user = await getUser(userId, msg.from.first_name, msg.from.username);
   const lang = user?.language || 'uz';
-  const session = getSession(userId);
-
+  const s = getSession(userId);
   if (!user) return bot.sendMessage(chatId, t('error_general', lang));
-  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
+  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
 
-  if (session.section === 'diagnostic' || session.awaitingInput === 'lab_results' || session.awaitingInput === 'medical_image') {
-    if (!session.section) session.section = 'diagnostic';
+  if (s.section === 'diagnostic' || s.awaitingInput === 'lab_results' || s.awaitingInput === 'medical_image') {
+    if (!s.section) s.section = 'diagnostic';
     await bot.sendMessage(chatId, t('image_analyzing', lang));
-
     try {
       const photo = msg.photo[msg.photo.length - 1];
-      const buf = await downloadFile(photo.file_id);
+      const buf = await dlFile(photo.file_id);
       const b64 = buf.toString('base64');
-      const profile = await getUserProfile(userId);
-      const caption = msg.caption || '';
-
-      const typeNames = { xray: 'X-ray', mri: 'MRI', ct: 'CT Scan', ultrasound: 'Ultrasound', blood: 'Blood test', urine: 'Urine test', hormone: 'Hormone test', other: 'Medical document' };
-      const typeName = typeNames[session.diagnosticSubType] || 'Medical image';
-
-      const promptText = session.diagnosticType === 'lab' || session.awaitingInput === 'lab_results'
-        ? `This is a ${typeName} result sheet. Read all values, compare with normal ranges, provide detailed analysis.${buildProfileContext(profile)}\n${caption ? 'Patient note: ' + caption : ''}`
-        : `Analyze this ${typeName}. Identify anatomy, normal/abnormal findings, differentials.${buildProfileContext(profile)}\n${caption ? 'Clinical info: ' + caption : ''}`;
-
-      const messages = [{ role: 'user', content: promptText }];
-      const response = await sendToAIWithImage(getDiagnosticPrompt(lang), messages, b64);
+      const p = await getUserProfile(userId);
+      const cap = msg.caption || '';
+      const types = { xray: 'X-ray', mri: 'MRI', ct: 'CT', ultrasound: 'Ultrasound', blood: 'Blood test', urine: 'Urine test', hormone: 'Hormone test', other: 'Medical document' };
+      const tn = types[s.diagSub] || 'Medical image';
+      const prompt = (s.diagType === 'lab' || s.awaitingInput === 'lab_results')
+        ? `This is a ${tn} sheet. Read all values, compare with ranges, analyze.${profileCtx(p)}\n${cap ? 'Note: ' + cap : ''}`
+        : `Analyze this ${tn}. Identify findings, differentials.${profileCtx(p)}\n${cap ? 'Info: ' + cap : ''}`;
+      const r = await sendToAIImg(getDiagnosticPrompt(lang), [{ role: 'user', content: prompt }], b64);
       await incrementUsage(userId, user.daily_count);
-      await saveMedicalRecord(userId, session.diagnosticType || 'unknown', typeName, { caption, subType: session.diagnosticSubType }, photo.file_id, response);
-      await sendLongMessage(chatId, response);
-      clearSession(userId);
-
-      await bot.sendMessage(chatId, '—', {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: t('again_analyze', lang), callback_data: 'section_diagnostic' }],
-            [{ text: t('ask_doctor', lang), callback_data: 'section_doctor' }],
-            [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
-          ]
-        }
-      });
-    } catch (err) {
-      console.error('photo analysis:', err.message);
-      await bot.sendMessage(chatId, t('error_general', lang));
-      clearSession(userId);
-    }
+      await saveMedicalRecord(userId, s.diagType || 'unknown', tn, { cap, sub: s.diagSub }, photo.file_id, r);
+      await sendLong(chatId, r); clearSession(userId);
+      await bot.sendMessage(chatId, '—', afterDiagKB(lang));
+    } catch (e) { console.error('photo:', e.message); await bot.sendMessage(chatId, t('error_general', lang)); clearSession(userId); }
     return;
   }
-
-  await bot.sendMessage(chatId, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticSubMenu(lang) });
+  await bot.sendMessage(chatId, t('diag_title', lang), { parse_mode: 'Markdown', ...diagnosticMenu(lang) });
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// 11. MAIN MESSAGE HANDLER
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// MAIN MESSAGE HANDLER
+// ═══════════════════════════════════════════════════════════════
 
 bot.on('message', async (msg) => {
   if (!msg.text || msg.text.startsWith('/') || msg.successful_payment) return;
-
-  const chatId = msg.chat.id;
-  const userId = msg.from.id;
-  const text = msg.text.trim();
+  const chatId = msg.chat.id, userId = msg.from.id, text = msg.text.trim();
   const user = await getUser(userId, msg.from.first_name, msg.from.username);
   const lang = user?.language || 'uz';
-  const session = getSession(userId);
-
+  const s = getSession(userId);
   if (!user) return bot.sendMessage(chatId, t('error_general', lang));
 
-  // ── Profil tahrirlash ──
-  if (session.profileEditing) {
-    const f = session.profileEditing;
-    let dbField, val;
+  // ── PROFIL ──
+  if (s.profileEditing) {
+    const f = s.profileEditing; let dbF, v;
     switch (f) {
-      case 'age': { const v = parseInt(text); if (!v || v < 1 || v > 150) return bot.sendMessage(chatId, '❌ 1-150'); dbField = 'age'; val = v; break; }
-      case 'weight': { const v = parseFloat(text); if (!v || v < 1 || v > 500) return bot.sendMessage(chatId, '❌'); dbField = 'weight'; val = v; break; }
-      case 'height': { const v = parseFloat(text); if (!v || v < 30 || v > 300) return bot.sendMessage(chatId, '❌'); dbField = 'height'; val = v; break; }
-      case 'allergies': dbField = 'allergies'; val = text; break;
-      case 'chronic': dbField = 'chronic_diseases'; val = text; break;
-      case 'meds': dbField = 'current_medications'; val = text; break;
-      default: session.profileEditing = null; return;
+      case 'age': { const n = parseInt(text); if (!n || n < 1 || n > 150) return bot.sendMessage(chatId, '❌ 1-150'); dbF = 'age'; v = n; break; }
+      case 'weight': { const n = parseFloat(text); if (!n || n < 1) return bot.sendMessage(chatId, '❌'); dbF = 'weight'; v = n; break; }
+      case 'height': { const n = parseFloat(text); if (!n || n < 30) return bot.sendMessage(chatId, '❌'); dbF = 'height'; v = n; break; }
+      case 'allergies': dbF = 'allergies'; v = text; break;
+      case 'chronic': dbF = 'chronic_diseases'; v = text; break;
+      case 'meds': dbF = 'current_medications'; v = text; break;
+      default: s.profileEditing = null; return;
     }
-    await updateUserField(userId, dbField, val);
-    session.profileEditing = null;
-    return bot.sendMessage(chatId, `✅ Saved!`, mainMenuKeyboard(lang));
+    await updateUserField(userId, dbF, v); s.profileEditing = null;
+    return bot.sendMessage(chatId, '✅', mainMenuKeyboard(lang));
   }
 
-  // ── Chronic data input ──
-  if (session.awaitingInput === 'chronic_data' && session.section === 'chronic' && session.chronicDisease) {
-    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
-    await bot.sendMessage(chatId, t('analyzing', lang));
-    session.awaitingInput = null;
-    const logs = await getChronicLogs(userId, session.chronicDisease, 7);
-    session.messages.push({
-      role: 'user',
-      content: `Disease: ${session.chronicDisease}\n\nToday's data:\n${text}\n\n${logs.length ? 'Last 7 days:\n' + JSON.stringify(logs.map(l => ({ date: l.created_at, data: l.data }))) : 'First entry.'}\n\nAnalyze: normal/abnormal, trends, alerts, recommendations.`
-    });
-
+  // ── CHRONIC DATA ──
+  if (s.awaitingInput === 'chronic_data' && s.section === 'chronic' && s.chronicDisease) {
+    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
+    await bot.sendMessage(chatId, t('analyzing', lang)); s.awaitingInput = null;
+    const logs = await getChronicLogs(userId, s.chronicDisease, 7);
+    s.messages.push({ role: 'user', content: `Disease: ${s.chronicDisease}\nToday: ${text}\n${logs.length ? 'Last 7d: ' + JSON.stringify(logs.map(l => ({ d: l.created_at, v: l.data }))) : 'First entry.'}\nAnalyze.` });
     try {
-      const response = await sendToAI(getChronicPrompt(lang), session.messages.slice(-20));
-      session.messages.push({ role: 'assistant', content: response });
+      const r = await sendToAI(getChronicPrompt(lang), s.messages.slice(-20));
+      s.messages.push({ role: 'assistant', content: r });
       await incrementUsage(userId, user.daily_count);
       let al = 'normal';
-      if (response.includes('🔴') || response.includes('CRITICAL')) al = 'critical';
-      else if (response.includes('🟡') || response.includes('WARNING')) al = 'warning';
-      await saveChronicLog(userId, session.chronicDisease, { raw: text }, response, al);
-      await sendLongMessage(chatId, response);
-      await bot.sendMessage(chatId, '—', chronicActiveKeyboard(session.chronicKey, lang));
-    } catch (err) { console.error(err.message); await bot.sendMessage(chatId, t('error_general', lang)); }
+      if (r.includes('🔴') || r.includes('CRITICAL')) al = 'critical';
+      else if (r.includes('🟡') || r.includes('WARNING')) al = 'warning';
+      await saveChronicLog(userId, s.chronicDisease, { raw: text }, r, al);
+      await sendLong(chatId, r);
+      await bot.sendMessage(chatId, '—', chronicActiveKB(s.chronicKey, lang));
+    } catch (e) { console.error(e.message); await bot.sendMessage(chatId, t('error_general', lang)); }
     return;
   }
 
-  // ── Diagnostika lab text ──
-  if (session.awaitingInput === 'lab_results' && session.section === 'diagnostic') {
-    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
-    await bot.sendMessage(chatId, t('analyzing', lang));
-    session.awaitingInput = null;
-    const profile = await getUserProfile(userId);
-    const messages = [{ role: 'user', content: `Analyze these lab results:${buildProfileContext(profile)}\n\nRESULTS:\n${text}` }];
-
+  // ── DIAG LAB TEXT ──
+  if (s.awaitingInput === 'lab_results' && s.section === 'diagnostic') {
+    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
+    await bot.sendMessage(chatId, t('analyzing', lang)); s.awaitingInput = null;
+    const p = await getUserProfile(userId);
     try {
-      const response = await sendToAI(getDiagnosticPrompt(lang), messages);
+      const r = await sendToAI(getDiagnosticPrompt(lang), [{ role: 'user', content: `Analyze lab results:${profileCtx(p)}\n\n${text}` }]);
       await incrementUsage(userId, user.daily_count);
-      await saveMedicalRecord(userId, 'lab', session.diagnosticSubType || 'lab', { raw: text }, null, response);
-      await sendLongMessage(chatId, response);
-      clearSession(userId);
-      await bot.sendMessage(chatId, '—', {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: t('again_analyze', lang), callback_data: 'section_diagnostic' }],
-            [{ text: t('ask_doctor', lang), callback_data: 'section_doctor' }],
-            [{ text: t('btn_main_menu', lang), callback_data: 'main_menu' }]
-          ]
-        }
-      });
-    } catch (err) { console.error(err.message); await bot.sendMessage(chatId, t('error_general', lang)); clearSession(userId); }
+      await saveMedicalRecord(userId, 'lab', s.diagSub || 'lab', { raw: text }, null, r);
+      await sendLong(chatId, r); clearSession(userId);
+      await bot.sendMessage(chatId, '—', afterDiagKB(lang));
+    } catch (e) { console.error(e.message); await bot.sendMessage(chatId, t('error_general', lang)); clearSession(userId); }
     return;
   }
 
-  // ── Image awaiting (text came instead) ──
-  if (session.awaitingInput === 'medical_image') {
-    session.diagnosticCaption = text;
+  // ── IMAGE AWAITING ──
+  if (s.awaitingInput === 'medical_image') {
+    s.diagCaption = text;
     return bot.sendMessage(chatId, `✅ ${t('send_image', lang)}`);
   }
 
-  // ── Active doctor/drug session ──
-  if (session.section === 'doctor' || session.section === 'drug') {
-    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentMethodKeyboard(lang));
-
+  // ── ACTIVE DOCTOR/DRUG ──
+  if (s.section === 'doctor' || s.section === 'drug') {
+    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
     if (checkEmergency(text)) await bot.sendMessage(chatId, t('emergency', lang));
-
-    if (!session.specialty) {
-      const det = detectSpecialty(text);
-      if (det) session.specialty = det;
-    }
-
-    session.messages.push({ role: 'user', content: text });
-    session.messageCount++;
+    if (!s.specialty) { const d = detectSpec(text); if (d) s.specialty = d; }
+    s.messages.push({ role: 'user', content: text }); s.msgCount++;
     await bot.sendMessage(chatId, t('analyzing', lang));
-
-    const promptFns = { doctor: getDoctorPrompt, drug: getDrugPrompt };
+    const fn = s.section === 'doctor' ? getDoctorPrompt : getDrugPrompt;
     try {
-      const response = await sendToAI(promptFns[session.section](lang), session.messages.slice(-20));
-      session.messages.push({ role: 'assistant', content: response });
+      const r = await sendToAI(fn(lang), s.messages.slice(-20));
+      s.messages.push({ role: 'assistant', content: r });
       await incrementUsage(userId, user.daily_count);
-      await sendLongMessage(chatId, response);
-      await bot.sendMessage(chatId, t('continue_or_end', lang), activeSessionKeyboard(session.section, lang));
-    } catch (err) { console.error(err.message); await bot.sendMessage(chatId, t('error_general', lang)); }
+      await sendLong(chatId, r);
+      await bot.sendMessage(chatId, t('continue_or_end', lang), sessionKeyboard(s.section, lang));
+    } catch (e) { console.error(e.message); await bot.sendMessage(chatId, t('error_general', lang)); }
     return;
   }
 
-  // ── Chronic free message ──
-  if (session.section === 'chronic' && session.chronicDisease) {
-    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang));
-    session.messages.push({ role: 'user', content: text });
+  // ── CHRONIC FREE MSG ──
+  if (s.section === 'chronic' && s.chronicDisease) {
+    if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
+    s.messages.push({ role: 'user', content: text });
     await bot.sendMessage(chatId, t('analyzing', lang));
     try {
-      const response = await sendToAI(getChronicPrompt(lang), session.messages.slice(-20));
-      session.messages.push({ role: 'assistant', content: response });
-      await incrementUsage(userId, user.daily_count);
-      await sendLongMessage(chatId, response);
+      const r = await sendToAI(getChronicPrompt(lang), s.messages.slice(-20));
+      s.messages.push({ role: 'assistant', content: r });
+      await incrementUsage(userId, user.daily_count); await sendLong(chatId, r);
     } catch { await bot.sendMessage(chatId, t('error_general', lang)); }
     return;
   }
 
-  // ── No section — default drug advisor ──
-  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentMethodKeyboard(lang));
+  // ── DEFAULT (hech narsa tanlanmagan) ──
+  if (!checkLimit(user)) return bot.sendMessage(chatId, t('limit_reached', lang), paymentKeyboard(lang));
   await bot.sendMessage(chatId, t('analyzing', lang));
   try {
-    const profile = await getUserProfile(userId);
-    const response = await sendToAI(getDrugPrompt(lang), [{ role: 'user', content: text + buildProfileContext(profile) }]);
+    const p = await getUserProfile(userId);
+    const r = await sendToAI(getDrugPrompt(lang), [{ role: 'user', content: text + profileCtx(p) }]);
     await incrementUsage(userId, user.daily_count);
-    await sendLongMessage(chatId, response);
+    await sendLong(chatId, r);
     await bot.sendMessage(chatId, t('select_section', lang), mainMenuKeyboard(lang));
-  } catch (err) { console.error(err.message); await bot.sendMessage(chatId, t('error_general', lang)); }
+  } catch (e) { console.error(e.message); await bot.sendMessage(chatId, t('error_general', lang)); }
 });
 
-// ═══════════════════════════════════════════════════════════════════════
-// 12. ERROR HANDLING
-// ═══════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// ERROR HANDLING
+// ═══════════════════════════════════════════════════════════════
 
-bot.on('polling_error', e => console.error('Polling:', e.message));
+bot.on('polling_error', e => console.error('Poll:', e.message));
 process.on('unhandledRejection', r => console.error('Unhandled:', r));
 process.on('uncaughtException', e => console.error('Uncaught:', e));
 
-console.log('🏥 MedAI v3.0 — Multilingual + Multi-Payment');
-console.log('🌐 Languages: UZ, UZ-Cyr, RU, EN, KK, KY, TG');
-console.log('💳 Payments: Telegram Pay, Payme, Click');
+// ═══════════════════════════════════════════════════════════════
+console.log('🏥 MedAI v3.1 ishga tushdi!');
+console.log('🌐 Tillar: UZ, UZ-Cyr, RU, EN, KK, KY, TG');
+console.log('💳 To\'lov: Telegram Pay, Payme, Click');
 console.log('⏰', new Date().toLocaleString());
